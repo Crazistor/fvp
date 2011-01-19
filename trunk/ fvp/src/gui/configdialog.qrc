@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+   <file>images/setup.png</file>
+   <file>images/display.png</file>
+   <file>images/network.png</file>
+   <file>images/alarm.png</file>
+   <file>images/mainwindow_background.png</file>
+</qresource>
+</RCC>
