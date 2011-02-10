@@ -50,14 +50,14 @@ struct _Parameter
 
 typedef struct _Parameter Parameter;
 
-Parameter *parameter_create();
 
+
+
+Parameter *parameter_create();
 Ret parameter_init(Parameter *thiz);
 SetupParameter *parameter_get_para(Parameter *thiz);
-
 Ret parameter_set_para(Parameter *thiz, SetupParameter *setup_para);
 Ret parameter_save_para(Parameter *thiz);
-
 void parameter_destroy(Parameter *thiz);
 
 

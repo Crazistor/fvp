@@ -61,6 +61,9 @@ typedef enum _Ret{
 		__func__, __LINE__); return;}
 
 
+#define color_t unsigned short
+
+
 #define DECL_PRIV0(thiz, priv) PrivInfo *priv = (thiz != NULL)?(PrivInfo *)thiz->priv_subclass[0]:NULL
 
 

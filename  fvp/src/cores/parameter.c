@@ -79,6 +79,10 @@ static Ret parameter_check_para(SetupParameter *para)
 	return RET_OK;
 }
 
+
+/*
+ * parameter create
+ */
 Parameter *parameter_create()
 {
 	Parameter *thiz  = NULL;
@@ -88,6 +92,9 @@ Parameter *parameter_create()
 	return thiz;
 }
 
+/*
+ * parameter init
+ */
 Ret parameter_init(Parameter *thiz)
 {
 	return_val_if_failed(thiz != NULL, RET_INVALID_PARAMETER);
@@ -127,13 +134,14 @@ OUT:
 	return ret;	
 }
 
-
+/*
+ * set parameter struct
+ */
 Ret parameter_set_para(Parameter *thiz, SetupParameter *setup_para)
 {
 	return_val_if_failed(thiz != NULL && setup_para != NULL, RET_INVALID_PARAMETER);
-	
+
 	memcpy(thiz->setup_para, setup_para, sizeof(SetupParameter));
-	printf("gggggggggggggggggggggggggg\n");
 	printf("value(%d)\n", thiz->setup_para->record_mode.is_chn_open[0]);
 	return RET_OK;
 }
@@ -189,6 +197,9 @@ OUT:
 	return ret;
 }
 
+/*
+ * destory the parameter struct
+ */
 void parameter_destroy(Parameter *thiz)
 {
 	if(thiz)
