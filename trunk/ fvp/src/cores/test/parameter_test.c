@@ -17,6 +17,5 @@ int main(int argc, char *argv[])
 	assert(parameter_save_para(thiz) == RET_OK);
 	parameter_destroy(thiz);
 
-	
 	return 0;
 }
