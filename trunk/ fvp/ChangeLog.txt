@@ -1,3 +1,8 @@
 
+
+2010-02-12
+	* add the  search_device module to the project <dcdcmin@gmail.com>
+
+
 2011-01-19
 	* create the project <dcdcmin@gmail.com>
