@@ -13,8 +13,8 @@ struct _Controller;
 typedef struct _Controller Controller;
 
 Controller *controller_create();
-int controller_bind_cores(Controller *thiz, Cores *cores);
 
+int controller_bind_cores(Controller *thiz, Cores *cores);
 int controller_save_parameter(Controller *thiz, SetupParameter *setup_para);
 
 void controller_destroy(Controller *thiz);
