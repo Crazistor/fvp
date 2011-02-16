@@ -31,6 +31,7 @@
 #include"search_device_client.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include"fvp_common.h"
 
 static void ipaddr_to_ipstr(unsigned long ulipaddr, char* pcIpStr) 
 {
@@ -45,12 +46,26 @@ static void ipaddr_to_ipstr(unsigned long ulipaddr, char* pcIpStr)
 
 int main(int argc, char *argv[])
 {
+	int result = 0;
 
 	SearchDeviceClient *thiz = search_device_client_create();
-	search_device_client_search_device(thiz, NULL);
+	search_device_client_search_device(thiz, &result);
 
-	getchar();
-
+	int j;
+	for(j = 0; j < 50; j++)
+	{
+		if(result == SEARCH_DEVICE_START)
+		{
+			printf("search device is doing!\n");
+		}
+		else  
+		{
+			printf("search device is OVER !\n");
+			break;
+		}
+		usleep(1000000);
+	}
+	
 	int numbers = 0;
 	int device_i = 0;
 	RemoteDeviceInfomation remote_device_info = {0};

@@ -52,7 +52,7 @@ typedef struct  _RemoteDeviceInfomation
 
 SearchDeviceClient *search_device_client_create();
 
-int search_device_client_search_device(SearchDeviceClient* thiz, void *search_result);
+int search_device_client_search_device(SearchDeviceClient* thiz, int *search_result);
 int search_device_client_get_device_numbers(SearchDeviceClient *thiz);
 int search_device_client_get_remote_device_by_id(SearchDeviceClient *thiz, int device_id, RemoteDeviceInfomation *remote_device);
 
