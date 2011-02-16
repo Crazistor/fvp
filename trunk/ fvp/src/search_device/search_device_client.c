@@ -42,6 +42,14 @@ struct _SearchDeviceClient
 	ArrayList *array_list_device;
 };
 
+
+typedef struct _SearhDeviceData
+{
+	SearchDeviceClient *search_device_client;
+	int *result;	/*1 start search 2 search ovser*/
+}SearhDeviceData;
+
+
 static void ipaddr_to_ipstr(unsigned long ulipaddr, char* pcIpStr) 
 {
    sprintf(pcIpStr, "%u.%u.%u.%u", 
@@ -101,17 +109,14 @@ static int search_device_get_remote_device_information(SearchDeviceClient *thiz,
 			case NET_COMM_MSG_DEVICE_SEARCH_RSP:
 				{
 					printf("recvfrom NET_COMM_MSG_DEVICE_SEARCH_RSP msg.\n");
-					unsigned long ipaddr = 0;
 					char ip_str[32] = {0};
 					DeviceSearchRespMsg_S *pDeviceSearchMsg;
 					pDeviceSearchMsg = (DeviceSearchRespMsg_S *)netMsgPacket.msgData;
-					ipaddr = ntohl(pDeviceSearchMsg->ipaddr);	
-					ipaddr_to_ipstr(ipaddr, ip_str);
+					pDeviceSearchMsg->ipaddr = ntohl(pDeviceSearchMsg->ipaddr);
+					ipaddr_to_ipstr(pDeviceSearchMsg->ipaddr, ip_str);
 					printf("the remote dvr device ip addr is(%s)\n", ip_str);
 					printf("web port(%d)\n", pDeviceSearchMsg->Port);
-
 					DeviceSearchRespMsg_S *device_data = (DeviceSearchRespMsg_S *)COMM_ZALLOC(sizeof(DeviceSearchRespMsg_S));
-
 					memcpy(device_data, pDeviceSearchMsg, sizeof(DeviceSearchRespMsg_S));
 					search_device_add_device_to_list(thiz, device_data);
 				}
@@ -132,14 +137,19 @@ static int search_device_get_remote_device_information(SearchDeviceClient *thiz,
 static void *search_device_thread(void *para)
 {
 	printf("============search_device_thread start============\n");
-	SearchDeviceClient *search_device_client = (SearchDeviceClient *)para;
-
+	SearhDeviceData *search_device_data = (SearhDeviceData *)para;
+	
+	SearchDeviceClient *search_device_client = search_device_data->search_device_client;
+	int *search_result = search_device_data->result;
+	*search_result = SEARCH_DEVICE_START;
+	
 	int socket_fd = -1;
 	
 	/*´´½¨ËÑË÷Ì×½Ó×Ö*/
 	if((socket_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1)		
 	{
 		printf("Create Search Socket Failed.Error:%d\n",socket_fd);
+		*search_result = SEARCH_DEVICE_FAILED;
 		goto OUT;
 	}
 	
@@ -160,6 +170,7 @@ static void *search_device_thread(void *para)
 	if (sendto(socket_fd, (char*)(&netMsgPacket), sizeof(netMsgPacket), 
 		0, (struct sockaddr *)&addrto, sizeof(addrto)) == -1)
 	{
+		*search_result = SEARCH_DEVICE_FAILED;
 		goto OUT;
 	}
 
@@ -196,13 +207,14 @@ static void *search_device_thread(void *para)
 		if(search_device_get_remote_device_information(search_device_client, socket_fd) != RET_OK)
 		{
 			printf("search_device_get_remote_device_information failed!\n");
+			*search_result = SEARCH_DEVICE_FAILED;
 			goto OUT;
 		}
 
 	}
 	
+	*search_result = SEARCH_DEVICE_SUCCESS;
 OUT:
-	
 	printf("============search_device_thread over============\n");
 	if(socket_fd >= 0)
 	{
@@ -221,14 +233,17 @@ SearchDeviceClient *search_device_client_create()
 	return thiz;
 }
 
-int search_device_client_search_device(SearchDeviceClient* thiz, void *search_result)
+int search_device_client_search_device(SearchDeviceClient* thiz, int *search_result)
 {
-	return_val_if_failed(thiz != NULL, RET_INVALID_PARAMETER);
-		
-	create_normal_thread(search_device_thread, (void *)thiz, NULL);
+	return_val_if_failed(thiz != NULL && search_result != NULL, RET_INVALID_PARAMETER);
 
-	return RET_OK;
+	SearhDeviceData search_device_data = {0};
+	search_device_data.search_device_client = thiz;
+	search_device_data.result= search_result;
 	
+	create_normal_thread(search_device_thread, (void *)&search_device_data, NULL);
+
+	return RET_OK;	
 }
 
 int search_device_client_get_device_numbers(SearchDeviceClient *thiz)
@@ -236,7 +251,6 @@ int search_device_client_get_device_numbers(SearchDeviceClient *thiz)
 	return_val_if_failed(thiz != NULL && thiz->array_list_device != NULL,  -1);
 	
 	return array_list_get_size(thiz->array_list_device);
-
 }
 
 
