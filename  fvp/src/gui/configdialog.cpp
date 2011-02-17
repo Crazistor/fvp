@@ -57,34 +57,27 @@ ConfigDialog::ConfigDialog()
 	pal.setBrush(QPalette::Window, QBrush(QPixmap("./images/mainwindow_background.png")));
 	setPalette(pal);
 
-
   	setWindowFlags(Qt::FramelessWindowHint);
 	
-	changeUiOsdBgColor();
 }
 
-void ConfigDialog::changeUiOsdBgColor()
-{
-	QBrush *BackColor = new QBrush(QColor(255,0,0)); 
-	QWSServer::setBackground(*BackColor); 
-}
 
 void ConfigDialog::createIcons()
 {
     QListWidgetItem *setupButton = new QListWidgetItem(contentsWidget);
-    setupButton->setIcon(QIcon(":/images/setup.png"));
+    setupButton->setIcon(QIcon("./images/setup.png"));
     setupButton->setText(tr("Setup"));
     setupButton->setTextAlignment(Qt::AlignHCenter);
     setupButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     QListWidgetItem *updateButton = new QListWidgetItem(contentsWidget);
-    updateButton->setIcon(QIcon(":/images/display.png"));
+    updateButton->setIcon(QIcon("./images/display.png"));
     updateButton->setText(tr("Display"));
     updateButton->setTextAlignment(Qt::AlignHCenter);
     updateButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
     QListWidgetItem *queryButton = new QListWidgetItem(contentsWidget);
-    queryButton->setIcon(QIcon(":/images/network.png"));
+    queryButton->setIcon(QIcon("./images/network.png"));
     queryButton->setText(tr("Network"));
     queryButton->setTextAlignment(Qt::AlignHCenter);
     queryButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);

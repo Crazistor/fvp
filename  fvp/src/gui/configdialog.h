@@ -22,7 +22,7 @@ public slots:
 
 private:
     void createIcons();
-	void changeUiOsdBgColor();
+
     QListWidget *contentsWidget;
     QStackedWidget *pagesWidget;
 };
