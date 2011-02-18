@@ -7,7 +7,7 @@ COMM_DIR=../../common
 
 SOURCES=search_device_client_test.c \
 		../search_device_client.c \
-		../array_list.c \
+		$(COMM_DIR)/array_list.c \
 		$(COMM_DIR)/fvp_function.c
 
 INCLUDES=-I../ \

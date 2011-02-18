@@ -127,6 +127,13 @@ typedef enum  _HddAlarm
 	HDD_ALARM_NR,
 }HddAlarm;
 
+
+
+#define SEARCH_DEVICE_START		0x2011
+#define SEARCH_DEVICE_FAILED 	0x2012
+#define SEARCH_DEVICE_SUCCESS 	0x2013
+
+
 #ifdef __cpluspluc
 }
 #endif

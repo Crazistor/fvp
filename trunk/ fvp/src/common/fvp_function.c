@@ -84,7 +84,6 @@ int public_get_file_size(char *file_name)
 	return_val_if_failed(file_name != NULL, -1);
 
 	struct stat buf;
-	int fd = -1;
 	
 	if(stat(file_name, &buf) == 0)
 	{
@@ -92,7 +91,7 @@ int public_get_file_size(char *file_name)
 	}
 	else
 	{
-		printf("stat log file failed! error(%d)\n", error);
+		printf("stat log file failed!\n");
 	}
 	
 	return  -1;
