@@ -5,6 +5,7 @@ HEADERS     = ./gui/configdialog.h \
               ./gui/pages.h		\
 	          ./gui/setuppage.h \
 			  ./gui/fvp_gui.h \
+			  ./fvp_screen.h \
 			  ./fvp_globals.h 
 
 SOURCES     = ./gui/configdialog.cpp \
@@ -12,6 +13,7 @@ SOURCES     = ./gui/configdialog.cpp \
 	      	  ./gui/setuppage.cpp \
 			  ./gui/fvp_gui.cpp\
 			  ./fvp_globals.c \
+			  ./fvp_screen.c \
                main.cpp 
 
 INCLUDEPATH  =./gui \
@@ -88,11 +90,5 @@ CONFIG += qt warn_on -O2 release
 
 OBJECTS_DIR += ./objs
 
-
-
-target.path = $$[QT_INSTALL_DEMOS]/books
-sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS *.pro images
-sources.path = $$[QT_INSTALL_DEMOS]/books
-INSTALLS += target sources
 
 	

@@ -1,5 +1,5 @@
 /*
- * File: search_device_client.h
+ * File: fvp_screen.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,46 +25,34 @@
 /*
  * History:
  * ================================================================
- * 2011-01-25 zhoumin <dcdcmin@gmail.com> created
+ * 2011-02-28 zhoumin <dcdcmin@gmail.com> created
  *
  */
 
-#ifndef SEARCH_DEVICE_CLIENT_H
-#define SEARCH_DEVICE_CLIENT_H
 
-#include"search_device_data.h"
+#ifndef FVP_SCREEN_H
+#define FVP_SCREEN_H
+
+
+#include"fvp_common.h"
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-struct _SearchDeviceClient;
-typedef struct _SearchDeviceClient SearchDeviceClient;
+struct _FvpScreen;
+typedef struct _FvpScreen FvpScreen;
 
+FvpScreen *fvp_screen_create(VideoResolution resolution);
 
-#define IPADDR_MAX_LEN 32
-typedef struct  _RemoteDeviceInfomation
-{
-	unsigned long ipaddr;	
-	char ipaddr_str[IPADDR_MAX_LEN];
-	int subModuleNum;                   //子模块数:  5, 表示3515；8, 表示3520
-	char UserPwd[8];					/*用户密码*/
-	unsigned int Port;					//媒体流端口
- 	unsigned int  DeviceID; 			/*本机编号*/
-}RemoteDeviceInformation;
+int fvp_screen_chanege_resolution(FvpScreen *thiz, VideoResolution resolution);
+int fvp_screen_get_width(FvpScreen *thiz);
+int fvp_screen_get_height(FvpScreen *thiz);
 
-SearchDeviceClient *search_device_client_create();
-
-int search_device_client_search_device(SearchDeviceClient* thiz, int *search_result);
-int search_device_client_get_device_numbers(SearchDeviceClient *thiz);
-int search_device_client_get_remote_device_by_id(SearchDeviceClient *thiz, int device_id, RemoteDeviceInformation *remote_device);
-
-void search_device_client_destory(SearchDeviceClient *thiz);
-
+void fvp_screen_destroy(FvpScreen *thiz);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
-
+#endif /*FVP_SCREEN_H*/

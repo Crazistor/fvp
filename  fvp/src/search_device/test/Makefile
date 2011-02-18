@@ -1,5 +1,5 @@
-CROSS_COMPILE=arm-hismall-linux-
-#CROSS_COMPILE=
+#CROSS_COMPILE=arm-hismall-linux-
+CROSS_COMPILE=
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
 
