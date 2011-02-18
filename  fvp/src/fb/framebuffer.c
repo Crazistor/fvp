@@ -139,7 +139,7 @@ int framebuffer_init(FrameBuffer *thiz, int fb_w, int fb_h)
 		goto OUT;
 	}
 
-    struct fb_var_screeninfo default_vinfo= {0};
+    struct fb_var_screeninfo default_vinfo = {0};
     if (ioctl(fd, FBIOGET_VSCREENINFO, &default_vinfo) < 0)
     {
 		printf("fun(%s):Get variable screen info failed\n", __func__);
