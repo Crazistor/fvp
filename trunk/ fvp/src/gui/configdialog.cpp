@@ -1,6 +1,6 @@
 #include <QtGui>
 #include <QtGui/QDialog> 
-#include<QWSServer>
+#include <QWSServer>
 #include "configdialog.h"
 #include "pages.h"
 #include "setuppage.h"

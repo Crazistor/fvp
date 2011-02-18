@@ -95,7 +95,6 @@ void SetupPage::designUiPage()
  */
 void SetupPage::syncParameterToPage()
 {
-	printf("syncParameter aaaaaaaaaaaaaaaaa\n");
 	SetupParameter *para = NULL;
 	int channel = 0;
 	
