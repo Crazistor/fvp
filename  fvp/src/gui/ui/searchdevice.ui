@@ -1,0 +1,76 @@
+<ui version="4.0" >
+ <class>searchDevice</class>
+ <widget class="QWidget" name="searchDevice" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>180</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="verticalLayout_3" >
+   <property name="geometry" >
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>161</width>
+     <height>321</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" >
+    <item>
+     <layout class="QVBoxLayout" >
+      <item>
+       <widget class="QListView" name="listView_device" >
+        <property name="movement" >
+         <enum>QListView::Static</enum>
+        </property>
+        <property name="viewMode" >
+         <enum>QListView::IconMode</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_searchDevice" >
+        <property name="text" >
+         <string>Search Device</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QPushButton" name="button_stopPlay" >
+          <property name="text" >
+           <string>Stop Play</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_livePlay" >
+          <property name="text" >
+           <string>Live Play</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_switchChannel" >
+          <property name="text" >
+           <string>Switch Channel</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
