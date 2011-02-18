@@ -129,6 +129,22 @@ typedef enum  _HddAlarm
 
 
 
+typedef enum _VideoResolution
+{	
+	VR_PAL,
+	VR_NTSC,
+	VR_720P,
+	VR_1080P,
+	VR_800x600,
+	VR_1024x768,
+	VR_1280x1024,
+	VR_1366x768,
+	VR_1440x900,
+	VR_1440x990,
+	VR_BUTT,
+}VideoResolution;
+
+
 #define SEARCH_DEVICE_START		0x2011
 #define SEARCH_DEVICE_FAILED 	0x2012
 #define SEARCH_DEVICE_SUCCESS 	0x2013

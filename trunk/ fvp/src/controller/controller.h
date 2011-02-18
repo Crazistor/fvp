@@ -37,12 +37,6 @@
 #include"cores.h"
 #include"search_device_client.h"
 
-/*
-#ifdef __cplusplus
-extern "C"{
-#endif
-*/
-
 struct _Controller;
 typedef struct _Controller Controller;
 
@@ -53,15 +47,7 @@ int controller_save_parameter(Controller *thiz, SetupParameter *setup_para);
 
 int controller_bind_search_device_client(Controller *thiz, SearchDeviceClient *search_device_client);
 int controller_search_device(Controller *thiz, void *ui_this);
-int controller_search_device_get_device_numbers(Controller *thiz);
-RemoteDeviceInfomation *controller_search_device_get_device_info_by_number(Controller *thiz, int number);
 
 void controller_destroy(Controller *thiz);
-
-/*
-#ifdef __cplusplus
-}
-#endif
-*/
 
 #endif /*CONTROLLER_H*/

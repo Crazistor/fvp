@@ -68,11 +68,12 @@ int main(int argc, char *argv[])
 	
 	int numbers = 0;
 	int device_i = 0;
-	RemoteDeviceInfomation remote_device_info = {0};
+	RemoteDeviceInformation remote_device_infor = {0};
 	int i;
 	numbers = search_device_client_get_device_numbers(thiz);
 	printf("The device numbers is (%d)\n", numbers);
 
+	char ip_str[32] = {0};
 	for(device_i = 1; device_i <= numbers; device_i++)
 	{
 		search_device_client_get_remote_device_by_id(thiz, device_i, &remote_device_info);
@@ -83,7 +84,6 @@ int main(int argc, char *argv[])
 		{
 			printf("%d", remote_device_info.UserPwd[i]);
 		}
-		char ip_str[32] = {0};
 		ipaddr_to_ipstr(remote_device_info.ipaddr, ip_str);
 		printf("ip address(%s)\n", ip_str);
 	}

@@ -257,12 +257,13 @@ int search_device_client_get_device_numbers(SearchDeviceClient *thiz)
 /*
  * device_id  device_id must > 0
  */
-int search_device_client_get_remote_device_by_id(SearchDeviceClient *thiz, int device_id, RemoteDeviceInfomation *remote_device)
+int search_device_client_get_remote_device_by_id(SearchDeviceClient *thiz, int device_id, RemoteDeviceInformation *remote_device)
 {
 	return_val_if_failed(thiz != NULL && device_id >= 0 && remote_device != NULL, RET_INVALID_PARAMETER);
 
 	DeviceSearchRespMsg_S *temp_device_inforamtion = NULL;
-
+	
+	char ip_str[IPADDR_MAX_LEN] = {0};
 	return_val_if_failed(thiz->array_list_device, RET_FAILED);
 	temp_device_inforamtion = (DeviceSearchRespMsg_S *)array_list_get_data_by_id(thiz->array_list_device, device_id - 1);
 
@@ -273,8 +274,12 @@ int search_device_client_get_remote_device_by_id(SearchDeviceClient *thiz, int d
 		remote_device->subModuleNum = temp_device_inforamtion->subModuleNum;
 		memcpy(remote_device->UserPwd, temp_device_inforamtion->UserPwd, 8);
 		remote_device->DeviceID = temp_device_inforamtion->DeviceID;
+		ipaddr_to_ipstr(remote_device->ipaddr, ip_str);
+		strncpy(remote_device->ipaddr_str, ip_str, IPADDR_MAX_LEN);
+
 		return RET_OK;
 	}
+	
 	
 	return RET_FAILED;
 }
