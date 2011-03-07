@@ -1,6 +1,5 @@
 
 
-
 2010-02-12
 	* add the  search_device module to the project <dcdcmin@gmail.com>
 
