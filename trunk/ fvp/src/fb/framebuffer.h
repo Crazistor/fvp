@@ -41,7 +41,9 @@ typedef struct _FrameBuffer FrameBuffer;
 FrameBuffer *framebuffer_create(char *fb_name);
 
 int framebuffer_init(FrameBuffer *thiz, int fb_w, int fb_h);
-int framebuffer_set_alpha(FrameBuffer *thiz, unsigned char alpha);
+int framebuffer_change_alpha_value(FrameBuffer *thiz, unsigned char alpha);
+void *framebuffer_get_mmap_buffer(FrameBuffer *thiz);
+
 
 void framebuffer_destroy(FrameBuffer *thiz);
 

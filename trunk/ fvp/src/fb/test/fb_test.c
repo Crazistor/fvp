@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	assert(framebuffer_init(thiz, 1024, 768) == RET_OK);
 
 	getchar();
-	framebuffer_set_alpha(thiz, 0x00);
+	framebuffer_change_alpha_value(thiz, 0x00);
 
 	getchar();
 	framebuffer_destroy(thiz);
