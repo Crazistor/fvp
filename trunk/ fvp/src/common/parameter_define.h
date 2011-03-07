@@ -37,6 +37,7 @@
 #define ASSIGN_FOUR_BYTES(number) (((number) + 3) / 4 * 4)
 
 #define PARAMETER_MAGIC_NUMBER 0x20101230
+
 typedef struct _RecordMode
 {
 	unsigned char is_chn_open[ASSIGN_FOUR_BYTES(MAX_CHANNEL_NUM)];/*1 open  0 close*/
@@ -49,19 +50,10 @@ typedef struct _RecordMode
 	unsigned char reservel[8];
 }RecordMode;
 
-
 typedef struct _SetupParameter
 {
 	unsigned long magic;
 	RecordMode record_mode;
 }SetupParameter;
-
-
-
-
-
-
-
-
 
 #endif /*PARAMETER_DEFINE_H*/
