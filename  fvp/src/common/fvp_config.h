@@ -36,8 +36,6 @@
 
 #define IO_ALARM_CHANNEL_NUM  4
 
-
-
 #endif /*FVP_CONFIG_H*/
 
 
