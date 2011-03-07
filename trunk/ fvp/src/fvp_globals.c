@@ -4,8 +4,8 @@ struct _FvpGlobals
 {
 	Controller *controller;
 	SetupParameter *setup_parameter;
-	FvpScreen *screen;
-	
+	FvpScreen *vga_screen;
+	FvpScreen *bnc_screen;
 }g_globals;
 
 
@@ -32,19 +32,27 @@ SetupParameter *fvp_default_setup_parameter(void)
 	return g_globals.setup_parameter;
 }
 
-
-void fvp_set_screen(FvpScreen *screen)
+void fvp_set_vag_screen(FvpScreen *vga_screen)
 {
-	g_globals.screen = screen;
+	g_globals.vga_screen = vga_screen;
 	return;
 }
 
-FvpScreen *fvp_default_screen(void)
+FvpScreen *fvp_default_vga_screen(void)
 {
-	return g_globals.screen;
+	
+	return g_globals.vga_screen;
 }
 
+void fvp_set_bnc_screen(FvpScreen *bnc_screen)
+{
+	g_globals.bnc_screen = bnc_screen;
+	return;
+}
 
-
+FvpScreen *fvp_default_bnc_screen(void)
+{
+	return g_globals.bnc_screen;
+}
 
 
