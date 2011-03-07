@@ -51,8 +51,6 @@ struct _Parameter
 typedef struct _Parameter Parameter;
 
 
-
-
 Parameter *parameter_create();
 Ret parameter_init(Parameter *thiz);
 SetupParameter *parameter_get_para(Parameter *thiz);
