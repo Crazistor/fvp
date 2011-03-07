@@ -50,6 +50,7 @@ struct _FrameBuffer
 	int framebuffer_fd;
 	int framebuffer_w;
 	int framebuffer_h;
+	bool b_init;
 	unsigned char *screen_mmap_buf;
 	int color_key;
 	int applah_value;
@@ -66,6 +67,11 @@ static struct fb_bitfield g_a16 = {15, 1, 0};
 #define FB_NOT_DISPLAY_COLOR COLOR_VALUE(0, 0xff, 0, 0)
 #define DEFAULT_ALPHA_VALUE 0xcf
 
+
+/*
+ * alpha 0x00 all transparent
+ 		0xff all not transparent
+ */
 static int framebuffer_fd_set_alpha(int fd, unsigned char alpha)
 {
 	return_val_if_failed(fd >= 0, RET_INVALID_PARAMETER);
@@ -75,7 +81,7 @@ static int framebuffer_fd_set_alpha(int fd, unsigned char alpha)
     
     stAlpha.bAlphaEnable = HI_TRUE;
     stAlpha.bAlphaChannel = HI_FALSE;
-    stAlpha.u8Alpha0 = alpha;  /*0xff为不透明，0x00为透明*/
+    stAlpha.u8Alpha0 = alpha;  
     stAlpha.u8Alpha1 = 0xff;
     stAlpha.u8GlobalAlpha = 0xff;
     if (ioctl(fd, FBIOPUT_ALPHA_HIFB, &stAlpha) < 0)
@@ -87,6 +93,11 @@ static int framebuffer_fd_set_alpha(int fd, unsigned char alpha)
 
 }
 
+
+/*
+  *  we will set a  color which the  framebuffer not to display this color,
+  *	most of the time,this color set as big red.
+  */
 static int framebuffer_set_not_display_color(int fd, color_t not_display_color)
 {
 	return_val_if_failed(fd >= 0, RET_INVALID_PARAMETER);	
@@ -117,6 +128,7 @@ FrameBuffer *framebuffer_create(char *fb_name)
 	thiz->framebuffer_name = COMM_ZALLOC(strlen(fb_name) + 1);
 	memcpy(thiz->framebuffer_name, fb_name, strlen(fb_name));
 	
+	thiz->b_init = false;
 	return thiz;
 }
 
@@ -191,6 +203,7 @@ int framebuffer_init(FrameBuffer *thiz, int fb_w, int fb_h)
 	/*set the color key*/
 	framebuffer_set_not_display_color(fd, FB_NOT_DISPLAY_COLOR);
 
+	thiz->b_init = true;
 	ret = RET_OK;
 OUT:
 	thiz->framebuffer_fd = fd;
@@ -201,14 +214,25 @@ OUT:
 /*
  * set the osd alpha value.0x00 max alpha value, 0xff min alpha value
  */
-int framebuffer_set_alpha(FrameBuffer *thiz, unsigned char alpha)
+int framebuffer_change_alpha_value(FrameBuffer *thiz, unsigned char alpha)
 {
 	return_val_if_failed(thiz != NULL, RET_INVALID_PARAMETER);
-
 
 	return framebuffer_fd_set_alpha(thiz->framebuffer_fd, alpha);
 }
 
+
+void *framebuffer_get_mmap_buffer(FrameBuffer *thiz)
+{
+	return_val_if_failed(thiz != NULL, NULL);
+	
+	if(thiz->b_init)
+	{
+		return (void *)thiz->screen_mmap_buf;
+	}
+	
+	return NULL;
+}
 
 void framebuffer_destroy(FrameBuffer *thiz)
 {
