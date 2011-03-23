@@ -1,5 +1,5 @@
 /*
- * File: fvp_gui.h
+ * File: fvp_gui.c
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,21 +25,34 @@
 /*
  * History:
  * ================================================================
- * 2011-02-14 zhoumin <dcdcmin@gmail.com> created
+ * 2011-02-28 zhoumin <dcdcmin@gmail.com> created
  *
  */
-
-#ifndef FVP_GUI_H
-#define FVP_GUI_H
-
+#include <QtGui>
+#include <QWSServer>
 #include <QApplication>
 #include "configdialog.h"
-#include "searchdevicepage.h"
-
-
-void init_gui(int argc, char *argv[]);
+#include "fvp_gui.h"
 
 
 
+static int set_osd_bg_color()
+{
+	QBrush *BackColor = new QBrush(QColor(255,0,0)); 
+	QWSServer::setBackground(*BackColor); 
+	return 0;
+}
 
-#endif /*FVP_GUI_H*/
+void init_gui(int argc, char *argv[])
+{
+	set_osd_bg_color();
+
+	Q_INIT_RESOURCE(configdialog);
+	QApplication app(argc, argv);
+	ConfigDialog dialog;
+	dialog.exec();
+	
+	return;
+}
+
+

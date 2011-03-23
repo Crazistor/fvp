@@ -40,6 +40,7 @@
 #include <linux/types.h>
 #include <string.h>
 #include <unistd.h>
+#include<stdbool.h>
 #include"framebuffer.h"
 #include"fvp_common.h"
 #include"hifb.h"

@@ -64,6 +64,8 @@ typedef enum _Ret{
 #define color_t unsigned short
 
 
+#define DECL_PRIV(thiz, priv) PrivInfo* priv = thiz != NULL ? (PrivInfo*)thiz->priv : NULL
+
 #define DECL_PRIV0(thiz, priv) PrivInfo *priv = (thiz != NULL)?(PrivInfo *)thiz->priv_subclass[0]:NULL
 
 
@@ -76,12 +78,32 @@ typedef enum _Ret{
 #endif/*__cplusplus*/
 
 
+
+
+
+
 #define COMM_ALLOC(s)       malloc(s)
 #define COMM_REALLOC(p, s)  realloc(p, s)
 #define COMM_ZALLOC(s)      calloc(1, s)
 #define COMM_FREE(p)        if(p) {free(p); p = NULL;}
-#define COMM_ZFREE(p, size) if(p) {memset((p), 0x00, (size)); free(p); p = NULL;
+#define COMM_ZFREE(p, size) if(p) {memset((p), 0x00, (size)); free(p); p = NULL;}
 
+
+static inline char *comm_strdup(char *s)
+{
+	char *buf = NULL;
+	if(s)
+	{
+		int length = strlen(s) + 1;
+		buf = (char *)COMM_ALLOC(length);
+		memcpy(buf, s, length);
+	}
+	return buf;
+}
+
+#define COMM_STRDUP(s)		comm_strdup(s)
+
+							
 
 typedef  enum _Week{
     WK_SUNDAY,
@@ -126,7 +148,6 @@ typedef enum  _HddAlarm
 	HDD_ALARM_NO_SPACE,
 	HDD_ALARM_NR,
 }HddAlarm;
-
 
 
 typedef enum _VideoResolution
