@@ -32,6 +32,7 @@
 #include"parameter_define.h"
 #include"fvp_globals.h"
 
+
 SetupPage::SetupPage(QWidget *parent)
     : QWidget(parent)
 {

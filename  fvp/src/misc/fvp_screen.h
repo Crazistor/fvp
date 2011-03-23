@@ -1,5 +1,5 @@
 /*
- * File: fvp_gui.h
+ * File: fvp_screen.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,21 +25,34 @@
 /*
  * History:
  * ================================================================
- * 2011-02-14 zhoumin <dcdcmin@gmail.com> created
+ * 2011-02-28 zhoumin <dcdcmin@gmail.com> created
  *
  */
 
-#ifndef FVP_GUI_H
-#define FVP_GUI_H
 
-#include <QApplication>
-#include "configdialog.h"
-#include "searchdevicepage.h"
+#ifndef FVP_SCREEN_H
+#define FVP_SCREEN_H
 
 
-void init_gui(int argc, char *argv[]);
+#include"fvp_common.h"
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 
+struct _FvpScreen;
+typedef struct _FvpScreen FvpScreen;
 
+FvpScreen *fvp_screen_create(VideoResolution resolution);
 
-#endif /*FVP_GUI_H*/
+int fvp_screen_chanege_resolution(FvpScreen *thiz, VideoResolution resolution);
+int fvp_screen_get_width(FvpScreen *thiz);
+int fvp_screen_get_height(FvpScreen *thiz);
+
+void fvp_screen_destroy(FvpScreen *thiz);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /*FVP_SCREEN_H*/

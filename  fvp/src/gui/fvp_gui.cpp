@@ -50,19 +50,20 @@ void init_gui(int argc, char *argv[])
 
 	Q_INIT_RESOURCE(configdialog);
 	QApplication app(argc, argv);
-#if 0
+#if 1
 	ConfigDialog dialog;
 	dialog.exec();
-#endif 
+#else
 	SearchDevicePage searchdevice_dialog;
 	ConfigDialog dialog;
 
-//hile(1)
+	while(1)
 	{
 		searchdevice_dialog.show();
 		app.exec();
- //dialog.exec();
+ 		dialog.exec();
 	}
+#endif	
 	return;
 }
 
