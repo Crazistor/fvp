@@ -32,19 +32,34 @@
 #ifndef FVP_SETTINGS_H
 #define FVP_SETTINGS_H
 
+#include<stdio.h>
+#include<stdlib.h>
+
 #ifdef __cplusplus
 extern "C"{
 #endif 
+
+
+#define  SETTINGS_GET_INT(a, b, c)  to_int(fvp_settings_get_value(a, b, c))
+
 
 struct _FvpSettings;
 typedef struct _FvpSettings FvpSettings;
 
 FvpSettings *fvp_settings_create(char *settings_file);
-
-char *fvp_settings_get_value(FvpSettings *thiz, char *group, char *key);
+char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *default_value);
 int fvp_settings_set_value(FvpSettings *thiz, char *key, char *value);
-
+int fvp_settings_sync(FvpSettings *thiz);
 void fvp_settings_destroy(FvpSettings *thiz);
+
+static inline int to_int(char *string)
+{
+	if(string)
+	{			
+		return atol(string);	
+	}
+	return -1;
+}
 
 
 #ifdef __cplusplus

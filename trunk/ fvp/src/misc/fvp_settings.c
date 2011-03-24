@@ -29,11 +29,16 @@
  * 2011-3-22 zhoumin <dcdcmin@gmail.com> created
  *
  */
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h> 
 #include"fvp_settings.h"
 #include"fvp_common.h"
 #include"ini_builder.h"
 #include"ini_parser.h"
 #include"fvp_mmap.h"
+#include"fvp_mutex.h"
+
 
 struct _GroupNode;
 
@@ -43,6 +48,7 @@ struct _FvpSettings
 {
 	struct _GroupNode *group_node;
 	struct _GroupNode *current_group;
+	fvp_mutex_t settings_lock;	
 	char *settings_file_name;
 	unsigned char have_comment_flag;
 	char comment_buffer[MAX_COMMENT_BUF_SIZE];
@@ -72,6 +78,35 @@ struct _GroupNode
 	struct _KeyNode *cur_node;
 };
 
+
+static int  parse_group_and_key(char *group_and_key, char *group, char *key, int max_length)
+{	
+	return_val_if_failed(group_and_key && group && key && max_length >0, -1);
+
+	char *p = NULL;
+	p = strstr(group_and_key, "/");
+
+	if(p)
+	{	
+		int group_length = 	p - group_and_key;
+		int key_length = strlen(group_and_key)-(p-group_and_key)-1;
+		
+		if(group_length >= max_length || key_length >= max_length)
+		{			
+			return -1;
+		}
+		
+		strncpy(group, group_and_key, group_length);	
+		strncpy(key, p + 1, key_length);	
+		
+		return 0;
+	}
+
+	return -1;
+}
+
+
+
 static struct _KeyNode *key_node_create(FvpSettings *settings, char *key, char *value)
 {
 	return_val_if_failed(settings && key , NULL);
@@ -93,8 +128,11 @@ static struct _KeyNode *key_node_create(FvpSettings *settings, char *key, char *
 
 static int groupNode_add_keyNode(struct _GroupNode *group_node, struct _KeyNode *key_node)
 {
+	return_val_if_failed(group_node, -1);
+	return_val_if_failed(key_node, -1);
 	if(group_node && key_node)
 	{	
+	
 		/*if first key_node is null add to the first keynode*/
 		if(group_node->key_node == NULL)
 		{	
@@ -103,6 +141,7 @@ static int groupNode_add_keyNode(struct _GroupNode *group_node, struct _KeyNode 
 		}
 		else
 		{
+		
 			group_node->cur_node->next_key_node = key_node;
 			group_node->cur_node = key_node;
 		}
@@ -185,12 +224,9 @@ static void  fvp_settings_builder_on_group(IniBuilder *thiz, char *group)
 	return;
 }
 
-
 static void fvp_settings_builder_on_key_value(IniBuilder *thiz, char *key, char *value)
 {
 	return_if_failed(thiz != NULL && key != NULL);
-
-//	printf("%s=%s\n", key, value);
 	
 	DECL_PRIV(thiz, priv);
 	
@@ -269,7 +305,6 @@ static  int fvp_settings_parser_file(FvpSettings *thiz)
 	fvp_mmap_destroy(ini_mmap);
 	ini_parser_destory(parser);
 	ini_builder_destroy(builder);
-	
 	return 0;
 }		
 
@@ -281,7 +316,7 @@ FvpSettings *fvp_settings_create(char *settings_file)
 
 	thiz = (FvpSettings *)COMM_ZALLOC(sizeof(FvpSettings));
 	return_val_if_failed(thiz != NULL, NULL);
-	
+	fvp_mutex_init(&thiz->settings_lock);
 	thiz->settings_file_name = COMM_STRDUP(settings_file);
 	
 	thiz->current_group = NULL;
@@ -292,32 +327,152 @@ FvpSettings *fvp_settings_create(char *settings_file)
 	return  thiz;
 }
 
-char *fvp_settings_get_value(FvpSettings *thiz, char *group, char *key)
+
+
+/*
+ input para :group_and_key  just like as group/key
+ return if find it then return the value 
+ 	   else return NULL
+*/
+char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *default_value)
 {
-	return_val_if_failed(thiz && group && key, NULL);
+	return_val_if_failed(thiz && group_and_key, NULL);
 
+	char group_buf[128] = {0};
+	char key_buf[128]= {0};
+	bool  is_find_group = false;
+		
+	/*parse the group_and_key */	
+	if(parse_group_and_key(group_and_key,  group_buf,  key_buf, 128) != 0)
+	{
+		printf("hand the function(parse_group_and_key) failed!\n");
+		return NULL;
+	}
+
+	fvp_mutex_lock(&thiz->settings_lock);
 	struct _GroupNode *group_node = thiz->group_node;
-
+	struct _KeyNode *key_node = NULL;
 	for(;group_node != NULL; group_node = group_node->next_group)
 	{	
-		if(strcmp(group_node->group_string, group) == 0)
+		if(strcmp(group_node->group_string, group_buf) == 0)
 		{	
+
+		
+			is_find_group = true;
 			/*find the group node */
-			struct _KeyNode *key_node = group_node->key_node;
+			key_node = group_node->key_node;
 			for(;key_node ;key_node = key_node->next_key_node)
 			{
 				/*find the key node*/
-				if(strcmp(key_node->key_string, key) == 0)
+				if(strcmp(key_node->key_string, key_buf) == 0)
 				{
-					printf("comment(%s)\n", key_node->comment);
+					fvp_mutex_unlock(&thiz->settings_lock);
 					return key_node->value_string;
 				}
 			}
+
+			/*find the group ,but not find the key, so we add the key and default_value to the group */
+			struct _KeyNode *temp_key_node = (struct _KeyNode *)COMM_ZALLOC(sizeof(struct _KeyNode));
+			temp_key_node->key_string = COMM_STRDUP(key_buf);
+			temp_key_node->value_string = COMM_STRDUP(default_value);
+			groupNode_add_keyNode(group_node, temp_key_node);
+			
 		}
+		
 	}
+
+
+	fvp_settings_add_group(thiz,  group_buf);
+	fvp_settings_add_key_value(thiz, key_buf, default_value);
 	
+	fvp_mutex_unlock(&thiz->settings_lock);
 	return NULL;
 }
+
+
+static int write_group_to_file(struct _GroupNode *group_node,  int fd)
+{
+	return_val_if_failed(group_node && fd >= 0,  -1);
+
+	char  buf[512] = {0};
+	
+	/*if have comment write the comment to settings file*/
+	if(group_node->comment)
+	{
+		sprintf(buf, "%s%s\r\n", COMMENT_CHAR, group_node->comment);
+		write(fd, buf, strlen(buf));
+	}
+
+	if(group_node->group_string)
+	{
+		sprintf(buf,  "[%s]\r\n", group_node->group_string);
+		write(fd, buf, strlen(buf));
+	}
+
+	return 0;
+}
+
+
+static write_key_node_to_file(struct _KeyNode *key_node, int fd)
+{
+	return_val_if_failed(key_node != NULL && fd >= 0, -1);
+	
+	char  buf[512] = {0};
+	/*if have comment write the comment to settings file*/
+	if(key_node->comment)
+	{
+		sprintf(buf, "%s%s\r\n", COMMENT_CHAR, key_node->comment);
+		write(fd, buf, strlen(buf));
+	}
+	
+	if(key_node->key_string && key_node->value_string)
+	{
+		sprintf(buf,  "%s=%s\r\n", key_node->key_string, key_node->value_string);
+		write(fd, buf, strlen(buf));
+	}
+	
+	return 0;
+}
+
+/*
+ * useage: sync the setting to the settings file.
+*/
+int fvp_settings_sync(FvpSettings *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+	fvp_mutex_lock(&thiz->settings_lock);
+
+	int fd = -1;
+
+	fd = open(thiz->settings_file_name,O_CREAT| O_WRONLY);
+	if(fd >= 0)
+	{
+		/*foreach every group node*/
+		struct _GroupNode *group_node = thiz->group_node;
+		struct _KeyNode *key_node = NULL;
+		for(;group_node != NULL; group_node = group_node->next_group)
+		{
+			write_group_to_file(group_node, fd);
+		
+			/*foreach every key node*/
+			key_node = group_node->key_node;
+			for(;key_node ;key_node = key_node->next_key_node)
+			{
+				write_key_node_to_file(key_node, fd);
+			}
+		}
+
+		write(fd, "\r\n", 2);
+		
+		close(fd);
+		fd = -1;
+	
+	}
+
+	fvp_mutex_unlock(&thiz->settings_lock);
+	return 0;
+}
+
 
 void fvp_settings_destroy(FvpSettings *thiz)
 {
@@ -351,10 +506,12 @@ void fvp_settings_destroy(FvpSettings *thiz)
 			COMM_FREE(temp_group_node->comment);
 			COMM_FREE(temp_group_node);
 		}		
-		
+		fvp_mutex_destroy(&thiz->settings_lock);
 		COMM_ZFREE(thiz, sizeof(FvpSettings));
 	}	
 	
 	return;
 }
+
+
 

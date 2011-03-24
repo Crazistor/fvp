@@ -36,11 +36,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <stdbool.h>
+#include <pthread.h>
+#include <errno.h>
 
 #ifdef __cpluscplus
 extern "C"{
 #endif
+
 
 typedef enum _Ret{
 	RET_OK,
@@ -76,9 +79,6 @@ typedef enum _Ret{
 #define DECLS_BEGIN
 #define DECLS_END
 #endif/*__cplusplus*/
-
-
-
 
 
 
