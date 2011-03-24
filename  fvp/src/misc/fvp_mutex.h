@@ -1,5 +1,5 @@
 /*
- * File: fb_test.c
+ * File: fvp_mutex.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,31 +25,32 @@
 /*
  * History:
  * ================================================================
- * 2011-3-24 zhoumin <dcdcmin@gmail.com> created
+ * 2011-02-14 zhoumin <dcdcmin@gmail.com> created
  *
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<assert.h>
-#include"framebuffer.h"
+
+#ifndef FVP_LOCK_H
+#define FVP_LOCK_H
+
 #include"fvp_common.h"
 
 
-int main(int argc, char *argv[])
-{
-	FrameBuffer *thiz  = NULL;
+#ifdef __cplusplus
+extern "C"{
+#endif
 
-	thiz = framebuffer_create("/dev/fb0");
-	assert(thiz != NULL);
-	assert(framebuffer_init(thiz, 1024, 768) == RET_OK);
 
-	getchar();
-	framebuffer_change_alpha_value(thiz, 0x00);
+typedef pthread_mutex_t fvp_mutex_t;
 
-	getchar();
-	framebuffer_destroy(thiz);
-	
-	return 0;
+void fvp_mutex_init(fvp_mutex_t *mutex);
+void fvp_mutex_lock(fvp_mutex_t *mutex);
+void fvp_mutex_unlock(fvp_mutex_t *mutex);
+
+
+#ifdef __cplusplus
 }
+#endif 
+
+#endif /*FVP_LOCK_H*/
 

@@ -30,7 +30,8 @@ HEADERS += ./misc/fvp_screen.h\
 	   ./misc/fvp_settings.h \
 	   ./misc/ini_parser.h \
 	   ./misc/ini_builder.h \
-	   ./misc/fvp_mmap.h 
+	   ./misc/fvp_mmap.h  \
+	   ./misc/fvp_mutex.h 
 
 
 SOURCES += ./misc/fvp_screen.c \
@@ -39,7 +40,8 @@ SOURCES += ./misc/fvp_screen.c \
 		./misc/fvp_settings.c \
 	   ./misc/ini_parser.c \
 	   ./misc/ini_builder.c \
-	   ./misc/fvp_mmap.c
+	   ./misc/fvp_mmap.c \
+	   ./misc/fvp_mutex.c
 
 INCLUDEPATH +=./misc
 
