@@ -48,7 +48,6 @@ typedef struct _FvpSettings FvpSettings;
 
 FvpSettings *fvp_settings_create(char *settings_file);
 char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *default_value);
-int fvp_settings_set_value(FvpSettings *thiz, char *key, char *value);
 int fvp_settings_sync(FvpSettings *thiz);
 void fvp_settings_destroy(FvpSettings *thiz);
 

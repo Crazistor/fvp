@@ -176,7 +176,6 @@ static int fvp_settings_add_group(FvpSettings *settings, char *group)
 {
 	return_val_if_failed(settings != NULL && group != NULL, -1);
 
-	
 	/*create a group node*/
 	struct _GroupNode *group_node  = (struct _GroupNode*)COMM_ZALLOC(sizeof(*group_node));
 	group_node->group_string = COMM_STRDUP(group);
