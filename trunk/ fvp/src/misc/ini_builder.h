@@ -54,6 +54,7 @@ struct _IniBuilder
 	IniBuilderOnKeyValue on_key_value;
 	IniBuilderOnComment on_comment;
 	IniBuilderDestroyFunc destroy;
+    unsigned char ref_count;
 	char priv[0];
 };
 
