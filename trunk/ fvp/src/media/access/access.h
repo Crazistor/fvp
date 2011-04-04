@@ -4,13 +4,12 @@
 
 struct _Access;
 typedef struct _Access Access;
-
 typedef block*(*access_read)(Access *thiz);
-
 typedef void (*access_destroy)(Access *thiz);
+
 struct _Access
 {
-    
+    access_read read;
     access_destroy destroy;
     char priv[0];
 };
