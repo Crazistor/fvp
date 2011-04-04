@@ -18,10 +18,15 @@ int main(int argc, char *argv[])
 	value = SETTINGS_GET_INT(settings, group_key, "1");
 	printf("groupAndKey(%s) value(%d)\n", group_key, value);
 	
-	value = SETTINGS_GET_INT(settings, "Alarm/IsGoogle", "1");
-	SETTINGS_GET_INT(settings, "Record/IsRecordOn", "1");
+    strcpy(group_key, "Alarm/IoAlarm");
+	value = SETTINGS_GET_INT(settings, group_key, "0");
+	printf("groupAndKey(%s) value(%d)\n", group_key, value);
+
+    strcpy(group_key, "Record/IsRecordOn");
+	value = SETTINGS_GET_INT(settings, group_key, "1");
+	printf("groupAndKey(%s) value(%d)\n", group_key, value);
+
 	fvp_settings_sync(settings);
-	
 
 	fvp_settings_destroy(settings);
 

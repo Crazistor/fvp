@@ -84,6 +84,7 @@ void ini_parser_set_builder(IniParser *thiz, IniBuilder *builder)
 	return_if_failed(thiz != NULL );
 
 	thiz->builder = builder;
+    builder->ref_count++;
 
 	return;
 }

@@ -93,6 +93,7 @@ static int  parse_group_and_key(char *group_and_key, char *group, char *key, int
 		
 		if(group_length >= max_length || key_length >= max_length)
 		{			
+            printf("The  grou length is too long,so we can't handle it \n");
 			return -1;
 		}
 		
@@ -261,6 +262,7 @@ static IniBuilder *fvp_settings_builder_create(void)
 		thiz->on_key_value = fvp_settings_builder_on_key_value;
 		thiz->on_comment = fvp_settings_builder_on_comment;
 		thiz->destroy = fvp_settings_builder_destroy;			
+        thiz->ref_count++;
 	}
 
 	return thiz;
@@ -331,8 +333,8 @@ FvpSettings *fvp_settings_create(char *settings_file)
 /*
  input para :group_and_key  just like as group/key
  return if find it then return the value 
- 	   else return NULL
-*/
+ else return NULL
+ */
 char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *default_value)
 {
 	return_val_if_failed(thiz && group_and_key, NULL);
@@ -345,7 +347,7 @@ char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *defau
 	if(parse_group_and_key(group_and_key,  group_buf,  key_buf, 128) != 0)
 	{
 		printf("hand the function(parse_group_and_key) failed!\n");
-		return NULL;
+		return default_value;
 	}
 
 	fvp_mutex_lock(&thiz->settings_lock);
@@ -355,7 +357,6 @@ char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *defau
 	{	
 		if(strcmp(group_node->group_string, group_buf) == 0)
 		{	
-
 		
 			is_find_group = true;
 			/*find the group node */
@@ -375,17 +376,18 @@ char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *defau
 			temp_key_node->key_string = COMM_STRDUP(key_buf);
 			temp_key_node->value_string = COMM_STRDUP(default_value);
 			groupNode_add_keyNode(group_node, temp_key_node);
+			fvp_mutex_unlock(&thiz->settings_lock);
+            return  default_value;
 			
 		}
 		
 	}
-
-
-	fvp_settings_add_group(thiz,  group_buf);
+    
+    fvp_settings_add_group(thiz,  group_buf);
 	fvp_settings_add_key_value(thiz, key_buf, default_value);
 	
 	fvp_mutex_unlock(&thiz->settings_lock);
-	return NULL;
+	return default_value;
 }
 
 
@@ -444,6 +446,7 @@ int fvp_settings_sync(FvpSettings *thiz)
 	int fd = -1;
 
 	fd = open(thiz->settings_file_name,O_CREAT| O_WRONLY);
+
 	if(fd >= 0)
 	{
 		/*foreach every group node*/
@@ -452,7 +455,6 @@ int fvp_settings_sync(FvpSettings *thiz)
 		for(;group_node != NULL; group_node = group_node->next_group)
 		{
 			write_group_to_file(group_node, fd);
-		
 			/*foreach every key node*/
 			key_node = group_node->key_node;
 			for(;key_node ;key_node = key_node->next_key_node)
