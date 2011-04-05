@@ -1,5 +1,5 @@
 /*
- * File: access.h
+ * File: demux.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,81 +25,59 @@
 /*
  * History:
  * ================================================================
- * 2011-02-17 zhoumin <dcdcmin@gmail.com> created
+ * 2011-4-4 zhoumin <dcdcmin@gmail.com> created
  *
  */
-#ifndef ACCESS_H
-#define ACCESS_H
+
+#ifndef DEMUX_H
+#define DEMUX_H
+
 
 #include"fvp_common.h"
 
 #ifdef __cplusplus
-extern "C"{
+extern "C"
 #endif 
 
-struct _Access
+struct _Demux
 {
-	access_seek seek;
-    access_read read;
-	access_control control;
-    access_destroy destroy;
-    char priv[0];
+	
 };
 
-
-typedef struct _Access Access;
-
+typedef struct _Demux Demux;
 
 
-typedef void (*access_seek)(Access *thiz,  unsigned long pos);
-typedef Block*(*access_read)(Access *thiz);
-typedef void (*access_control)(Access *thiz, int query, va_list args);
-typedef void (*access_destroy)(Access *thiz);
 
 
-/*
- * seek 
- */
-static inline void access_seek(Access *thiz, unsigned long pos)
-{
-    return thiz->seek(thiz,  pos);
-}
-
-/*
- * control
- */
-static inline void access_control(Access *thiz, int query, va_list args)
+static inline int demux_demux(Demux *thiz)
 {	
 	
-    return thiz->control(thiz, query, args);
 }
 
- 
-/*
- * read a block and return the block
- */
-static inline Block *access_read(Access *thiz)
+static inline int demux_va_control( Demux *demux, int query, va_list args )
 {
-
-    return thiz->read(Access *thiz);
+    return demux->pf_control( demux, query, args );
 }
 
 
-/*
- * destroy the access
- */
-static inline void access_destroy(Access *thiz)
+static inline int demux_control(Demux *thiz, int query, ...)
 {
-    if(thiz)
-    {
-        thiz->destroy(thiz);
-    }
-	return;
+    va_list args;
+    int     i_result;
+
+    va_start( args, i_query );
+    i_result = demux_vaControl( p_demux, i_query, args );
+    va_end( args );
+    return i_result;
 }
+
 
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 
-#endif /*ACCESS_H*/
+#endif /*DEMUX_H*/
+
+
+
