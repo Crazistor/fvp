@@ -1,18 +1,25 @@
 #!/bin/bash
-#author :  dcdcmin@gmail.com
+#authr :  dcdcmin@gmail.com
 
 
 if [ $# -lt 2 ];then
-    echo "11111usage:code_gen.sh filename IsHeadFile[y,n]"
+    echo "usage:code_gen.sh filename IsHeadFile[y,n]"
     exit 1
 fi
 
 if [ $2 != "y" -a $2 != "n" ];then
-    echo "2222usage:code_gen.sh filename IsHeadFile[y,n]"
+    echo "usage:code_gen.sh filename IsHeadFile[y,n]"
     exit 1
 fi
 
+
+
 FileName=$1
+
+if [ -f $FileName ];then
+    echo "The file[$FileName] is exist"
+    exit 
+fi 
 
 if [ $2 == "y" ];then
     IsHeadFile=y
@@ -21,7 +28,7 @@ else
 fi
 
 echo "/*
-* File: $FileName
+ * File: $FileName
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -62,10 +69,9 @@ echo "
 echo "$IsHeadFile"
 TempString=$FileName
 if [ $IsHeadFile = "y" ];then
-        echo "hello world"
         declare -u TempString
         TempString=$FileName
-        echo "$TempString"
+#        echo "$TempString"
 
 fi
 
@@ -98,4 +104,9 @@ echo "
 " >> $FileName
 
 
+if [ $IsHeadFile = "y" ];then
+    sed 's/.H/_H/g' $FileName > temp
+    mv temp $FileName
+    rm -f temp
+fi
 
