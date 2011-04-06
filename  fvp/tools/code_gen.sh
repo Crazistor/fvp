@@ -20,8 +20,7 @@ else
     IsHeadFile=n
 fi
 
-echo "
-/*
+echo "/*
 * File: $FileName
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
@@ -54,7 +53,13 @@ echo "
 
 
 
-echo "aaaaaaaaaaaaa$IsHeadFile"
+#insert space line
+echo "
+
+
+" >> $FileName
+
+echo "$IsHeadFile"
 TempString=$FileName
 if [ $IsHeadFile = "y" ];then
         echo "hello world"
@@ -65,8 +70,8 @@ if [ $IsHeadFile = "y" ];then
 fi
 
 if [ $IsHeadFile = "y" ];then
-    echo "google"
-
+    echo "#ifndef $TempString" >> $FileName
+    echo "#define $TempString" >> $FileName
 fi
 
 
@@ -75,6 +80,22 @@ fi
 
 
 
+
+echo "
+
+
+
+">> $FileName
+
+
+if [ $IsHeadFile = "y" ];then
+    echo "#endif /*$TempString*/" >> $FileName
+fi
+
+#insert a space line
+echo "
+
+" >> $FileName
 
 
 
