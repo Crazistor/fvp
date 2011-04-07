@@ -248,8 +248,12 @@ static void fvp_settings_builder_on_comment(IniBuilder *thiz, char *comment)
 static void fvp_settings_builder_destroy(IniBuilder *thiz)
 {
 	if(thiz)
-	{
-		COMM_ZFREE(thiz, sizeof(thiz) + sizeof(PrivInfo));
+	{	
+		thiz->ref_count--;
+		if(thiz->ref_count <= 0)
+		{
+			COMM_ZFREE(thiz, sizeof(thiz) + sizeof(PrivInfo));
+		}
 	}
 }
 
@@ -261,8 +265,8 @@ static IniBuilder *fvp_settings_builder_create(void)
 		thiz->on_group = fvp_settings_builder_on_group;
 		thiz->on_key_value = fvp_settings_builder_on_key_value;
 		thiz->on_comment = fvp_settings_builder_on_comment;
-		thiz->destroy = fvp_settings_builder_destroy;			
-        thiz->ref_count++;
+		thiz->destroy = fvp_settings_builder_destroy;	
+		thiz->ref_count = 0;
 	}
 
 	return thiz;
