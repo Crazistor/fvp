@@ -34,43 +34,38 @@
 
 
 #include"fvp_common.h"
+#include"access.h"
+
 
 #ifdef __cplusplus
 extern "C"
 #endif 
 
-struct _Demux
+
+struct _Demuxer
 {
+	Access *access;
 	
+	char priv[0];
 };
 
-typedef struct _Demux Demux;
+typedef struct _Demuxer Demuxer;
 
 
+/*
+ * create a demuxer 
+ */
+Demuxer *demuxer_create();
 
+/*
+ * get the video and audio data, demux 
+ */
+int demuxer_demux(Demuxer *thiz);
 
-static inline int demux_demux(Demux *thiz)
-{	
-	
-}
-
-static inline int demux_va_control( Demux *demux, int query, va_list args )
-{
-    return demux->pf_control( demux, query, args );
-}
-
-
-static inline int demux_control(Demux *thiz, int query, ...)
-{
-    va_list args;
-    int     i_result;
-
-    va_start( args, i_query );
-    i_result = demux_vaControl( p_demux, i_query, args );
-    va_end( args );
-    return i_result;
-}
-
+/*
+ * destroy the demuxer
+*/
+void demuxer_destroy(Demuxer *thiz);
 
 
 #ifdef __cplusplus
