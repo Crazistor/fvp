@@ -25,36 +25,67 @@
 /*
  * History:
  * ================================================================
- * 2011-02-17 zhoumin <dcdcmin@gmail.com> created
+ * 2011-04-07 zhoumin <dcdcmin@gmail.com> created
  *
  */
 #ifndef ACCESS_H
 #define ACCESS_H
 
 #include"fvp_common.h"
+#include"block.h"
+#include<stdarg.h>
 
 #ifdef __cplusplus
 extern "C"{
 #endif 
 
+
+struct _Access;
+typedef struct _Access Access;
+
+typedef void (*AccessSeek)(Access *thiz,  unsigned long pos);
+typedef int (*AccessRead)(Access *thiz, uint8_t *buffer, size_t len);
+typedef Block*(*AccessBlock)(Access *thiz);
+typedef void (*AccessControl)(Access *thiz, int query, va_list args);
+typedef void (*AccessDestroy)(Access *thiz);
+
+
 struct _Access
 {
-	access_seek seek;
-    access_read read;
-	access_control control;
-    access_destroy destroy;
+	AccessSeek seek;
+    AccessBlock block;
+    AccessRead read;
+	AccessControl control;
+    AccessDestroy destroy;
+    struct
+    {
+        unsigned int i_update;  /* Access sets them on change,
+                                   Input removes them once take into account*/
+
+        uint64_t     i_size;    /* Write only for access, read only for input */
+        uint64_t     i_pos;     /* idem */
+        bool         b_eof;     /* idem */
+
+        int          i_title;    /* idem, start from 0 (could be menu) */
+        int          i_seekpoint;/* idem, start from 0 */
+    } info;
     char priv[0];
 };
 
 
-typedef struct _Access Access;
 
-
-
-typedef void (*access_seek)(Access *thiz,  unsigned long pos);
-typedef Block*(*access_read)(Access *thiz);
-typedef void (*access_control)(Access *thiz, int query, va_list args);
-typedef void (*access_destroy)(Access *thiz);
+/*
+ * read a data from the access
+ */
+static inline int access_read(Access *thiz, uint8_t *buffer, size_t len)
+{	
+	if(thiz != NULL && thiz->read != NULL )
+	{
+		return thiz->read(thiz, buffer, len);
+	}
+	
+	return -1;	
+}
 
 
 /*
@@ -62,6 +93,8 @@ typedef void (*access_destroy)(Access *thiz);
  */
 static inline void access_seek(Access *thiz, unsigned long pos)
 {
+	return_if_failed(thiz != NULL);
+	
     return thiz->seek(thiz,  pos);
 }
 
@@ -70,6 +103,8 @@ static inline void access_seek(Access *thiz, unsigned long pos)
  */
 static inline void access_control(Access *thiz, int query, va_list args)
 {	
+	return_if_failed(thiz != NULL);
+
 	
     return thiz->control(thiz, query, args);
 }
@@ -78,10 +113,11 @@ static inline void access_control(Access *thiz, int query, va_list args)
 /*
  * read a block and return the block
  */
-static inline Block *access_read(Access *thiz)
-{
+static inline Block *access_block(Access *thiz)
+{	
+	return_val_if_failed(thiz != NULL, NULL);
 
-    return thiz->read(Access *thiz);
+    return thiz->block(thiz);
 }
 
 
@@ -90,16 +126,18 @@ static inline Block *access_read(Access *thiz)
  */
 static inline void access_destroy(Access *thiz)
 {
-    if(thiz)
+    if(thiz && thiz->destroy)
     {
         thiz->destroy(thiz);
     }
+    
 	return;
 }
-
 
 #ifdef __cplusplus
 }
 #endif 
 
 #endif /*ACCESS_H*/
+
+
