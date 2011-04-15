@@ -39,9 +39,7 @@
 /*
  * create 
  */
-Access *access_file_create();
-
-
+Access *access_file_create(char *file_path);
 
 
 #ifdef __cplusplus

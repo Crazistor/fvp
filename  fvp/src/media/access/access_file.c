@@ -39,16 +39,17 @@ typedef struct _PrivInfo
 }PrivInfo;
 
 
+
 /*read a block from the file*/
 static Block* access_file_block(Access *thiz)
 {
 	Block *block = NULL;
-	
+
+	msg_dbg("fun[%s]\n", __func__);
 
 	
 	return block;
 }
-
 
 /*
  * Read: standard read on a file descriptor.
@@ -57,7 +58,6 @@ static int  access_file_read(Access *thiz, uint8_t *buffer, size_t len)
 {
 	return_val_if_failed(thiz != NULL && buffer != NULL && len >= 0, -1);
 	
-	MSG_DBG("access_file_read\n");
 	int ret = -1;
 	DECL_PRIV(thiz, priv);	
 	/*read a len length data to the buffer*/
@@ -65,7 +65,7 @@ static int  access_file_read(Access *thiz, uint8_t *buffer, size_t len)
 	
 	if(ret < 0)
 	{
-		MSG_DBG("Failed to read\n");
+		msg_dbg("Failed to read\n");
         switch (errno)
         {
             case EINTR:
@@ -73,7 +73,7 @@ static int  access_file_read(Access *thiz, uint8_t *buffer, size_t len)
                 break;
 
             default:
-				MSG_DBG("Failed to read\n");
+				msg_dbg("Failed to read\n");
                 thiz->info.b_eof = true;
                 return 0;
         }
@@ -102,7 +102,6 @@ static void access_file_seek(Access *thiz, unsigned long pos)
 {
 	return_if_failed(thiz != NULL );
 
-	
 	DECL_PRIV(thiz, priv);	
 	lseek(priv->fd, pos, SEEK_SET);
 	
@@ -117,10 +116,11 @@ static void access_file_control(Access *thiz, int query, va_list args)
 {	
 	return_if_failed(thiz != NULL);
 	
-	MSG_DBG("access_file_control\n");
+	msg_dbg("access_file_control\n");
 	
 	return;
 }
+
 
 
 /*
@@ -133,12 +133,11 @@ static void access_file_destroy(Access *thiz)
 		DECL_PRIV(thiz, priv);	
 		if(priv->fd >= 0)
 		{
+			printf("fd(%d)\n", priv->fd);
 			close(priv->fd);
 			priv->fd = -1;
 		}
-
-		COMM_ZFREE(priv, sizeof(PrivInfo));
-		COMM_ZFREE(thiz, sizeof(*thiz));
+		COMM_ZFREE(thiz, sizeof(*thiz) + sizeof(PrivInfo));
 	}
 	
 	return;
@@ -158,24 +157,25 @@ Access *access_file_create(char *file_path)
 	fd = open(file_path, O_RDONLY);
 	if(fd <= 0)
 	{
-		MSG_DBG("error:open the file failed!\n");
+		msg_dbg("error:open the file failed!\n");
 		return NULL;
 	}
 	
 	Access *thiz = (Access *)COMM_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
 	return_val_if_failed(thiz != NULL, NULL);
+
 	
 	thiz->seek = access_file_seek;
 	thiz->read = access_file_read;
 	thiz->block = access_file_block;
 	thiz->control = access_file_control;
 	thiz->destroy = access_file_destroy;
-	
-	
-	PrivInfo* priv = (PrivInfo *)thiz->priv;
-	priv->fd = fd;
-	priv->i_nb_reads = 0;
 
+	DECL_PRIV(thiz, priv);
+	
+	priv->fd = 3;
+	priv->i_nb_reads = 0;
+	
 	return thiz;
 }
 
