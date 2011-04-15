@@ -36,13 +36,13 @@
 
 int main(int argc, char *argv[])
 {
-	MSG_DBG("Test the access file\n");
+	msg_dbg("Test the access file\n");
 	Access *access_file = NULL;
 	unsigned char buffer[1024]  = {0};
 		
 	access_file = access_file_create(TEST_FILENAME);
 	assert(access_file != NULL);
-	
+
 	access_seek(access_file , 0);
 	access_control(access_file , 0, NULL);
 	
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	{
 		access_read(access_file, buffer, 128);
 	}
-
+	
 	access_destroy(access_file);
 
 	return  0;
