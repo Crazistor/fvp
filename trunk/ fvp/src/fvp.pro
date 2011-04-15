@@ -31,7 +31,9 @@ HEADERS += ./misc/fvp_screen.h\
 	   ./misc/ini_parser.h \
 	   ./misc/ini_builder.h \
 	   ./misc/fvp_mmap.h  \
-	   ./misc/fvp_mutex.h 
+	   ./misc/fvp_mutex.h \
+	   ./misc/block.h \
+	   ./misc/fvp_msg.h
 
 
 SOURCES += ./misc/fvp_screen.c \
@@ -41,7 +43,9 @@ SOURCES += ./misc/fvp_screen.c \
 	   ./misc/ini_parser.c \
 	   ./misc/ini_builder.c \
 	   ./misc/fvp_mmap.c \
-	   ./misc/fvp_mutex.c
+	   ./misc/fvp_mutex.c\
+	   ./misc/block.c \
+	   ./misc/fvp_msg.c
 
 INCLUDEPATH +=./misc
 
@@ -80,6 +84,23 @@ SOURCES += ./search_device/search_device_client.c
 
 INCLUDEPATH +=./search_device
 
+###############media##########
+HEADERS += ./media/access/access.h \
+			./media/access/access_file.h \
+			./media/input/demuxer.h \
+			./media/decoder/decoder.h \
+			./media/media_player.h
+
+
+SOURCES += ./media/access/access_file.c  \	
+			./media/input/demuxer.c \
+			./media/decoder/decoder.c \
+			./media/media_player.c 
+
+INCLUDEPATH +=./media/access/ \
+				./media/decoder \
+				./media/input \
+				./media 
 
 LIBS=./cores/libcores.a
 
