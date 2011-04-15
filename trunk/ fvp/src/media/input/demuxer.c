@@ -30,38 +30,75 @@
  */
 
 #include"demuxer.h"
+#include"decoder.h"
+#include"access_file.h"
 
-typedef struct _PrivInfo
-{	
-		
+struct _Demuxer
+{
+	Access *access;
+	Decoder *decoder;
 	
-}PrivInfo;
+};
+
+
+#define FILE_NAME "./test.txt"
 
 
 Demuxer *demuxer_create()
 {
 	Demuxer *thiz = NULL;
+	char *file_name = "test.txt";
 	
+	thiz = (Demuxer *)COMM_ZALLOC(sizeof(Demuxer));
+	return_val_if_failed(thiz != NULL, NULL);
+
+	/*create a access and decoder*/
+	thiz->access = access_file_create(file_name);
+	if(thiz->access == NULL)
+	{
+		msg_dbg("Error : not enough memory!\n");
+		goto OUT_ERROR;
+	}
+	
+	thiz->decoder = decoder_create(0, 720, 576);
+	if(thiz->decoder == NULL)
+	{
+		msg_dbg("Error: alloc thiz->decoder not enough memory!\n");
+		goto OUT_ERROR;
+	}
 	
 	return thiz;
+	
+OUT_ERROR:
+	
+	if(thiz->access)
+	{
+		access_destroy(thiz->access);
+	}
+	
+	return NULL;
 }
 
-int demuxer_demux(Demuxer *thiz);
+
+int demuxer_demux(Demuxer *thiz)
 {
 	return_val_if_failed(thiz != NULL, -1);
 
-	/*wait */
-
-
-	/*get a  block from the access*/
-
-
-	/*send the block to the out */
+	Block *block = NULL;
 	
+	/*get a  block from the access*/
+	block = access_block(thiz->access);
+	if(!block)
+	{
+		msg_dbg("read b block failed!\n");
+		return 1;
+	}
+
+	/*send the block to the decoder */
+	decoder_decode_data(thiz->decoder, block);
 
 	return 0;
 }
-
 
 
 void demuxer_destroy(Demuxer *thiz)
@@ -69,11 +106,10 @@ void demuxer_destroy(Demuxer *thiz)
 	if(thiz)
 	{
 
+		msg_dbg("demuxer_destroy!\n");
+	
 	}
+	
 	return;
 }
-
-
-
-
 

@@ -1,5 +1,5 @@
 /*
- * File: demux.h
+ * File: mpp_system.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -13,8 +13,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * but WI_HOUT ANY WARRANTY; without even the implied warranty of
+ * MER_HANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,49 +23,49 @@
  */
 
 /*
- * History:
+ *_History:
  * ================================================================
- * 2011-4-4 zhoumin <dcdcmin@gmail.com> created
+ * Thu Apr 14 11:23:41 CST 2011 zhoumin <dcdcmin@gmail.com> created
  *
  */
+#ifndef MPP_SYSTEM_H
+#define MPP_SYSTEM_H
 
-#ifndef DEMUX_H
-#define DEMUX_H
 
-
-#include"fvp_common.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "hi_common.h"
+#include "hi_comm_video.h"
+#include "hi_comm_sys.h"
+#include "hi_comm_vo.h"
+#include "hi_comm_vi.h"
+#include "hi_comm_vpp.h"
+#include "hi_comm_venc.h"
+#include "mpi_vb.h"
+#include "mpi_sys.h"
+#include "mpi_vi.h"
+#include "mpi_vo.h"
+#include "mpi_vpp.h"
+#include "mpi_venc.h"
 
 
 #ifdef __cplusplus
-extern "C"
+extern "C"{
 #endif 
 
 
-struct _Demuxer;
-typedef struct _Demuxer Demuxer;
+int mpp_system_init();
 
+int mpp_system_deinit();
 
-/*
- * create a demuxer 
- */
-Demuxer *demuxer_create();
-
-/*
- * get the video and audio data, demux 
- */
-int demuxer_demux(Demuxer *thiz);
-
-/*
- * destroy the demuxer
-*/
-void demuxer_destroy(Demuxer *thiz);
 
 
 #ifdef __cplusplus
 }
-#endif
+#endif 
 
-#endif /*DEMUX_H*/
+
+#endif /*MPP_SYSTEM_H*/
 
 
 

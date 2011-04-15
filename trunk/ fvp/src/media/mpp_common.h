@@ -1,5 +1,5 @@
 /*
- * File: demux.h
+ * File: mpp_common.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -13,8 +13,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * but WI_HOUT ANY WARRANTY; without even the implied warranty of
+ * MER_HANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,49 +23,36 @@
  */
 
 /*
- * History:
+ *_History:
  * ================================================================
- * 2011-4-4 zhoumin <dcdcmin@gmail.com> created
+ * Fri Apr 15 15:39:17 CST 2011 zhoumin <dcdcmin@gmail.com> created
  *
  */
 
-#ifndef DEMUX_H
-#define DEMUX_H
 
 
-#include"fvp_common.h"
+
+#ifndef MPP_COMMON_H
+#define MPP_COMMON_H
 
 
-#ifdef __cplusplus
-extern "C"
-#endif 
+typedef enum hiVO_DEV_E
+{
+    VO_DEV_HD  = 0,                 /* high definition device */
+    VO_DEV_AD  = 1,                 /* assistant device */
+    VO_DEV_SD  = 2,                 /* spot device */
+    VO_DEV_BUTT
+} VO_DEV_E;
+
+#define VO_BKGRD_RED      0xFF0000    /* red back groud color */
+#define VO_BKGRD_GREEN    0x00FF00    /* green back groud color */
+#define VO_BKGRD_BLUE     0x0000FF    /* blue back groud color */
+#define VO_BKGRD_BLACK    0x000000    /* black back groud color */
 
 
-struct _Demuxer;
-typedef struct _Demuxer Demuxer;
 
 
-/*
- * create a demuxer 
- */
-Demuxer *demuxer_create();
-
-/*
- * get the video and audio data, demux 
- */
-int demuxer_demux(Demuxer *thiz);
-
-/*
- * destroy the demuxer
-*/
-void demuxer_destroy(Demuxer *thiz);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /*DEMUX_H*/
+#endif /*MPP_COMMON*/
 
 
 
