@@ -76,7 +76,9 @@ typedef struct _VideoWinodws VideoWindows;
 VideoWindows *video_windows_create(VO_DEV video_dev, VO_INTF_SYNC_E vo_system_sync);
 
 
+
 void video_windows_set_display_mode(VideoWindows *thiz, VideoPictrureMode picture_mode);
+
 
 /*
  *destroy the video windows
