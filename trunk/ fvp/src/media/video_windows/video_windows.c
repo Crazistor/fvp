@@ -31,7 +31,24 @@
 
 
 
-#inlcude"video_windows.h"
+#include"fvp_common.h"
+#include"video_windows.h"
+
+
+typedef struct _WindowsPictureInfo
+{
+	int x;
+	int y;
+	int pic_width;
+	int pic_height;
+
+	VoPictureBindType vo_bind_type;
+	int bind_dec_channel_id;
+	
+	int video_input_dev;
+	int video_input_dev_channel;
+	
+}WindowsPictureInfo;
 
 
 
@@ -40,10 +57,20 @@ struct _VideoWindows
 	int windows_width;
 	int windows_height;
 	int display_rate;
-	VO_DEV video_device;
-	VO_INTF_SYNC_E vo_system_sync;
 	
+	VO_DEV vo_dev;
+	VO_INTF_SYNC_E vo_system_sync;
+
+	int cur_pic_numbers;					/*current display picture numbers*/
+	WindowsPictureInfo pictures[VO_MAX_CHN_NUM];		
 };
+
+
+
+
+
+
+
 static int get_width_height_by_resolution(VO_INTF_SYNC_E vo_system_sync, int *width, int *height,int *rate)
 {
 	return_val_if_failed(vo_system_sync < VO_OUTPUT_BUTT, -1);
@@ -127,13 +154,13 @@ static int get_width_height_by_resolution(VO_INTF_SYNC_E vo_system_sync, int *wi
 	return 0;
 }
 
-static int get_display_rate(VO_DEV video_device, VO_INTF_SYNC_E vo_system_sync)
+static int get_display_rate(VO_DEV vo_dev, VO_INTF_SYNC_E vo_system_sync)
 {
-	return_val_if_failed(video_device <VO_DEV_BUTT && vo_system_sync < VO_OUTPUT_BUTT, -1);
+	return_val_if_failed(vo_dev <VO_DEV_BUTT && vo_system_sync < VO_OUTPUT_BUTT, -1);
 
 	int display_rate = -1;
 
-	switch(video_device)
+	switch(vo_dev)
 	{
         case VO_DEV_HD:
         case VO_DEV_AD:
@@ -147,29 +174,29 @@ static int get_display_rate(VO_DEV video_device, VO_INTF_SYNC_E vo_system_sync)
 }
 
 
-static void get_video_output_dev_attr(VO_DEV video_device, VO_PUB_ATTR_S *stVoDevAttr)
+static void get_video_output_dev_attr(VO_DEV vo_dev, VO_PUB_ATTR_S *stVoDevAttr)
 {
 	if(stVoDevAttr)
 	{
-	    switch (video_device)
+	    switch (vo_dev)
 	    {
 	        case VO_DEV_HD:
-	            stVoDevAttr.enIntfType = VO_INTF_VGA;
-	            stVoDevAttr.enIntfSync = VO_OUTPUT_800x600_60;
-	            stVoDevAttr.u32BgColor = VO_BKGRD_BLACK;
+	            stVoDevAttr->enIntfType = VO_INTF_VGA;
+	            stVoDevAttr->enIntfSync = VO_OUTPUT_800x600_60;
+	            stVoDevAttr->u32BgColor = VO_BKGRD_BLACK;
 	            break;
 	        case VO_DEV_AD:
-	            stVoDevAttr.enIntfType = VO_INTF_VGA;
-	            stVoDevAttr.enIntfSync = VO_OUTPUT_800x600_60;
-	            stVoDevAttr.u32BgColor = VO_BKGRD_BLACK;
+	            stVoDevAttr->enIntfType = VO_INTF_VGA;
+	            stVoDevAttr->enIntfSync = VO_OUTPUT_800x600_60;
+	            stVoDevAttr->u32BgColor = VO_BKGRD_BLACK;
 	            break;
 	        case VO_DEV_SD:
-	            stVoDevAttr.enIntfType = VO_INTF_CVBS;
-	            stVoDevAttr.enIntfSync = VO_OUTPUT_PAL;
-	            stVoDevAttr.u32BgColor = VO_BKGRD_BLACK;
+	            stVoDevAttr->enIntfType = VO_INTF_CVBS;
+	            stVoDevAttr->enIntfSync = VO_OUTPUT_PAL;
+	            stVoDevAttr->u32BgColor = VO_BKGRD_BLACK;
 	            break;
 	        default:
-	            return HI_FAILURE;
+	            return;
 	    }
 
 	}
@@ -183,15 +210,15 @@ static void get_video_output_layer_attr(VO_VIDEO_LAYER_ATTR_S *VideoLayerAttr, i
 {
     if(VideoLayerAttr)
     {
-	    VideoLayerAttr.stDispRect.s32X = 0;
-	    VideoLayerAttr.stDispRect.s32Y = 0;
-	    VideoLayerAttr.stDispRect.u32Width   = width;
-	    VideoLayerAttr.stDispRect.u32Height  = height;
-	    VideoLayerAttr.stImageSize.u32Width  = width;
-	    VideoLayerAttr.stImageSize.u32Height = height;
-	    VideoLayerAttr.u32DispFrmRt = diplay_rate;
-	    VideoLayerAttr.enPixFormat = PIXEL_FORMAT_YUV_SEMIPLANAR_420;
-	    VideoLayerAttr.s32PiPChn = VO_DEFAULT_CHN;	    
+	    VideoLayerAttr->stDispRect.s32X = 0;
+	    VideoLayerAttr->stDispRect.s32Y = 0;
+	    VideoLayerAttr->stDispRect.u32Width   = width;
+	    VideoLayerAttr->stDispRect.u32Height  = height;
+	    VideoLayerAttr->stImageSize.u32Width  = width;
+	    VideoLayerAttr->stImageSize.u32Height = height;
+	    VideoLayerAttr->u32DispFrmRt = diplay_rate;
+	    VideoLayerAttr->enPixFormat = PIXEL_FORMAT_YUV_SEMIPLANAR_420;
+	    VideoLayerAttr->s32PiPChn = VO_DEFAULT_CHN;	    
     }
     
     return;
@@ -203,17 +230,19 @@ static int init_video_output_device(VideoWindows *thiz)
 
     HI_S32 ret;
     VO_PUB_ATTR_S stVoDevAttr;
-    
-	ret = HI_MPI_VO_Disable(thiz->video_device);
+    VO_DEV vo_dev = thiz->vo_dev;
+	
+
+	ret = HI_MPI_VO_Disable(vo_dev);
     if (HI_SUCCESS != ret)
     {
         msg_dbg("HI_MPI_VO_Disable fail 0x%08x.\n", ret);
         return -1;
     }
 
-	get_video_output_dev_attr(&stVoDevAttr);
+	get_video_output_dev_attr(vo_dev, &stVoDevAttr);
 	
-    ret = HI_MPI_VO_SetPubAttr(thiz->video_device, &stVoDevAttr);
+    ret = HI_MPI_VO_SetPubAttr(vo_dev, &stVoDevAttr);
     if (HI_SUCCESS != ret)
     {
         msg_dbg("HI_MPI_VO_SetPubAttr fail 0x%08x.\n", ret);
@@ -221,7 +250,7 @@ static int init_video_output_device(VideoWindows *thiz)
     }
 
     
-    ret = HI_MPI_VO_Enable(thiz->video_device);
+    ret = HI_MPI_VO_Enable(vo_dev);
     if (HI_SUCCESS != ret)
     {
         msg_dbg("HI_MPI_VO_Enable fail 0x%08x.\n", ret);
@@ -240,18 +269,18 @@ static int init_video_output_layer(VideoWindows *thiz)
 
 	get_video_output_layer_attr(&videolayer_attr, thiz->windows_width, thiz->windows_height, thiz->display_rate);
     /* set public attr of VO*/
-    ret = HI_MPI_VO_SetVideoLayerAttr(thiz->video_device, &videolayer_attr);
+    ret = HI_MPI_VO_SetVideoLayerAttr(thiz->vo_dev, &videolayer_attr);
     if (HI_SUCCESS != ret)
     {
-        msg_dbg("set video layer of dev %u failed %#x!\n", thiz->video_device, ret);
+        msg_dbg("set video layer of dev %u failed %#x!\n", thiz->vo_dev, ret);
         return -1;
     }
 
     /* enable VO device*/
-    ret = HI_MPI_VO_EnableVideoLayer(thiz->video_device);
+    ret = HI_MPI_VO_EnableVideoLayer(thiz->vo_dev);
     if (HI_SUCCESS != ret)
     {
-        msg_dbg("enable video layer of dev %d failed with %#x !\n", thiz->video_device, ret);
+        msg_dbg("enable video layer of dev %d failed with %#x !\n", thiz->vo_dev, ret);
         return -1;
     }
 
@@ -259,43 +288,107 @@ static int init_video_output_layer(VideoWindows *thiz)
 
 }
 
-VideoWindows *video_windows_create(VO_DEV video_dev, VO_INTF_SYNC_E vo_system_sync)
+VideoWindows *video_windows_create(VO_DEV_E video_dev, VO_INTF_SYNC_E vo_system_sync)
 {	
-	VideoWindows *thiz = (VideoWindows *)(COMM_ALLOC(sizeof(VideoWindows)));
+	VideoWindows *thiz = (VideoWindows *)(COMM_ZALLOC(sizeof(VideoWindows)));
 	
 	if(thiz == NULL)
 	{
 		msg_dbg("fun(%s)  not enough memory!\n", __func__);
 		return NULL;
 	}
-	
-	thiz->vo_system_sync = vo_system_sync;
 
+	thiz->vo_dev = video_dev;
+	thiz->vo_system_sync = vo_system_sync;
+	
 
 	get_width_height_by_resolution(vo_system_sync, &thiz->windows_width, &thiz->windows_height, &thiz->display_rate);
 	
 	init_video_output_device(thiz);
-
+	
 	return thiz;
 }
 
 
-void video_windows_set_display_mode(VideoWindows *thiz, VideoPictrureMode picture_mode)
+int video_windows_set_display_mode(VideoWindows *thiz, VideoPictureMode picture_mode)
 {
 	return_val_if_failed(thiz != NULL , -1);
-	
 
+	
+	return 0;
+}
+
+int video_windows_picture_bind_decode_chn(VideoWindows *thiz, int vo_picture_id, int decode_chn_id)
+{
+	return_val_if_failed(thiz != NULL && vo_picture_id < VO_MAX_CHN_NUM, -1);
+
+	msg_dbg("fun[%s]\n", __func__);
+
+	int ret = HI_FAILURE;
+	VO_DEV vo_dev = thiz->vo_dev;
+	
+	ret = HI_MPI_VDEC_BindOutput(decode_chn_id, vo_dev, vo_picture_id);
+
+	if(ret != HI_SUCCESS)
+	{
+		msg_dbg("Bind the vdec output failed %#x\n", ret);
+		return -1;
+	}
 
 	return 0;
 }
 
 
+int video_windows_picture_bind_video_input_chn(VideoWindows *thiz)
+{
+
+	return_val_if_failed(thiz != NULL , -1);
+
+	msg_dbg("fun[%s]\n", __func__);
+
+	return 0;
+}
+
 void video_windows_destroy(VideoWindows *thiz)
 {
-	
+	if(thiz)
+	{	
+		msg_dbg("fun[%s]\n", __func__);
 
+		VO_CHN vo_channel= 0;
+		HI_S32 ret = 0;
+		for(vo_channel; vo_channel < thiz->cur_pic_numbers;vo_channel++)
+		{
+			ret = HI_MPI_VO_DisableChn(thiz->vo_dev, vo_channel);
+			if (HI_SUCCESS != ret)
+			{
+				msg_dbg("HI_MPI_VO_DisableChn(%d, %d) fail, err code: 0x%08x.\n",
+					thiz->vo_dev, vo_channel, ret);
+				return;
+			}
+		}
+		ret = HI_MPI_VO_DisableVideoLayer(thiz->vo_dev);
+		if (HI_SUCCESS != ret)
+		{
+			msg_dbg("HI_MPI_VO_DisableVideoLayer(%d) fail, err code: 0x%08x.\n",
+				thiz->vo_dev, ret);
+			return;
+		}
+		ret = HI_MPI_VO_Disable(thiz->vo_dev);
+		if(HI_SUCCESS != ret)
+		{
+			msg_dbg("HI_MPI_VO_DisableVideoLayer(%d) fail, err code: 0x%08x.\n",
+				thiz->vo_dev, ret);
+			return;
+		}
 		
+	}
+
+	return;		
 }
+
+
+
 
 
 
