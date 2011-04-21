@@ -28,6 +28,22 @@
  * Fri Apr 15 15:39:17 CST 2011 zhoumin <dcdcmin@gmail.com> created
  *
  */
+ 
+#include "hi_common.h"
+#include "hi_comm_video.h"
+#include "hi_comm_sys.h"
+#include "hi_comm_vo.h"
+#include "hi_comm_vi.h"
+#include "hi_comm_vpp.h"
+#include "hi_comm_venc.h"
+#include "hi_comm_vdec.h"
+#include "mpi_vb.h"
+#include "mpi_sys.h"
+#include "mpi_vi.h"
+#include "mpi_vo.h"
+#include "mpi_vpp.h"
+#include "mpi_venc.h"
+#include "mpi_vdec.h"
 
 
 
@@ -36,19 +52,21 @@
 #define MPP_COMMON_H
 
 
+#define MAX_ACCESSERS 			6
+
+
 typedef enum hiVO_DEV_E
 {
     VO_DEV_HD  = 0,                 /* high definition device */
     VO_DEV_AD  = 1,                 /* assistant device */
     VO_DEV_SD  = 2,                 /* spot device */
     VO_DEV_BUTT
-} VO_DEV_E;
+}VO_DEV_E;
 
 #define VO_BKGRD_RED      0xFF0000    /* red back groud color */
 #define VO_BKGRD_GREEN    0x00FF00    /* green back groud color */
 #define VO_BKGRD_BLUE     0x0000FF    /* blue back groud color */
 #define VO_BKGRD_BLACK    0x000000    /* black back groud color */
-
 
 
 

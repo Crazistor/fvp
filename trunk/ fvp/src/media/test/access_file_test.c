@@ -32,7 +32,7 @@
 #include"access_file.h"
 
 
-#define TEST_FILENAME "./test.txt"
+#define TEST_FILENAME "file:./test.txt"
 
 int main(int argc, char *argv[])
 {

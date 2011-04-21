@@ -144,15 +144,49 @@ static void access_file_destroy(Access *thiz)
 }
 
 
+static int parse_access_path(char *access_path, char *file_name, size_t file_name_len)
+{
+	return_val_if_failed(access_path != NULL && file_name != NULL, -1);
+
+	if(strstr(access_path, ACCESS_KEY_WORKD) == 0)
+	{
+		msg_dbg("not math the key workd(%s)\n", ACCESS_KEY_WORKD);
+		return -1;
+	}
+
+	char *p = NULL;
+	p = strchr(access_path, ':');
+	if(p != NULL)
+	{
+		strncpy(file_name, p + 1, file_name_len);
+		return 0;
+	}
+
+	return -1;
+}
+
 /*
  * create access 
+ * input para --access_path : such as [file:/home/file_name.mov]
  */
-Access *access_file_create(char *file_path)
+Access *access_file_create(char *access_path)
 {
-	return_val_if_failed(file_path, NULL);
+	return_val_if_failed(access_path, NULL);
 	
 	int fd = -1;
+	char file_path[64] = {0};
 
+	/*parse the access_path get the file name*/
+	if(parse_access_path(access_path, file_path, 64) != 0)
+	{
+		msg_dbg("Fun(%s) error parse the access_path(%s) failed!\n", __func__, access_path);
+		return NULL;
+	}
+	
+	Access *thiz = (Access *)COMM_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
+	return_val_if_failed(thiz != NULL, NULL);
+
+	printf("file_path(%s)\n", file_path);
 	/*open the file */
 	fd = open(file_path, O_RDONLY);
 	if(fd <= 0)
@@ -160,11 +194,7 @@ Access *access_file_create(char *file_path)
 		msg_dbg("error:open the file failed!\n");
 		return NULL;
 	}
-	
-	Access *thiz = (Access *)COMM_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
-	return_val_if_failed(thiz != NULL, NULL);
 
-	
 	thiz->seek = access_file_seek;
 	thiz->read = access_file_read;
 	thiz->block = access_file_block;

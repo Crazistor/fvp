@@ -32,6 +32,7 @@
 #ifndef DECODER_H
 #define DECODER_H
 
+#include"mpp_common.h"
 #include"fvp_common.h"
 #include"block.h"
 #include<stdarg.h>
