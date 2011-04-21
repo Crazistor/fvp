@@ -32,7 +32,7 @@
 #ifndef MEDIA_PLAY_H
 #define MEDIA_PLAY_H
 
-
+#include"mpp_common.h"
 #include"fvp_common.h"
 
 
@@ -68,7 +68,7 @@ enum _MediaPlayerQuery
 };
 
 /*create a  media player*/
-MediaPlayer *media_player_create();
+MediaPlayer *media_player_create(int vdec_chn, RECT_S out_rect, char *access_path);
 
 /*start to play the record or net stream*/
 int media_player_play(MediaPlayer *thiz);

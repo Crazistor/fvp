@@ -30,6 +30,7 @@
  */
 
 
+#include"mpp_common.h"
 #include"media_player.h"
 #include"demuxer.h"
 #include"access_file.h"
@@ -37,6 +38,7 @@
 #include"fvp_lock.h"
 #include"fvp_msg.h"
 #include"fvp_function.h"
+#include"access_factory.h"
 
 struct _MediaPlayer
 {	
@@ -99,7 +101,8 @@ static void *media_play_thread(void *para)
 	return NULL;
 }
 
-MediaPlayer *media_player_create()
+
+MediaPlayer *media_player_create(int vdec_chn, RECT_S out_rect, char *access_path)
 {
 	MediaPlayer *thiz = (MediaPlayer *)COMM_ALLOC(sizeof(MediaPlayer));
 	if(thiz == NULL)
@@ -108,11 +111,13 @@ MediaPlayer *media_player_create()
 		return NULL;
 	}
 
-	thiz->access = access_file_create("test.txt");
+	thiz->access = accesser_factory_create_a_acceser(access_path);
+	
 	return_val_if_failed(thiz->access != NULL, NULL);
 	
-//	thiz->decoder = decoder_create();
+	thiz->decoder = decoder_create(vdec_chn, out_rect->u32Width, out_rect->u32Height);
 	return_val_if_failed(thiz->decoder != NULL, NULL);
+	
 	thiz->state = MEDIA_NOT_START;
 	fvp_mutex_init(&thiz->lock);
 	

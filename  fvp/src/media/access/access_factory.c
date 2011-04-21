@@ -1,5 +1,5 @@
 /*
- * File: access_file.h
+ * File: access_factory.c
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -25,33 +25,44 @@
 /*
  * History:
  * ================================================================
- * 2011-04-07 zhoumin <dcdcmin@gmail.com> created
+ * Tue Apr 19 10:31:14 CST 2011 zhoumin <dcdcmin@gmail.com> created
  *
  */
- 
-#ifndef ACCESS_FILE_H
-#define ACCESS_FILE_H
 
-#include"access.h"
-
-#define ACCESS_KEY_WORKD "file"
-/*
- * create 
- */
-Access *access_file_create(char *access_path);
-
-char *access_file_match_keyword(void);
+#include"access_factory.h"
 
 
-#ifdef __cplusplus
-extern "C"{
-#endif 
 
-
-#ifdef __cplusplus
+Access *accesser_factory_create_a_acceser(char *access_path)
+{
+	Access *thiz = NULL;
+	
+	if(access_path)
+	{
+		if(strstr(access_path, "file"))
+		{
+			thiz = access_file_create(access_path);
+		}
+		else
+		{	
+			msg_dbg("Fun(%s)error not define \n", __func__);
+		}
+	}
+		
+	return thiz;	
 }
-#endif 
 
-#endif /*ACCESS_FILE_H*/
+
+
+
+ 
+
+
+
+
+
+
+
+
 
 

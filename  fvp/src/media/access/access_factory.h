@@ -1,5 +1,5 @@
 /*
- * File: access_file.h
+ * File: access_factory.h
  * Author:  zhoumin  <dcdcmin@gmail.com>
  * Brief:   
  *
@@ -13,8 +13,8 @@
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * but WI_HOUT ANY WARRANTY; without even the implied warranty of
+ * MER_HANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,24 +23,16 @@
  */
 
 /*
- * History:
+ *_History:
  * ================================================================
- * 2011-04-07 zhoumin <dcdcmin@gmail.com> created
+ * Tue Apr 19 10:30:57 CST 2011 zhoumin <dcdcmin@gmail.com> created
  *
  */
- 
-#ifndef ACCESS_FILE_H
-#define ACCESS_FILE_H
+#ifndef ACCESS_FACTORY_H
+#define ACCESS_FACTORY_H
 
-#include"access.h"
+#include"access_file.h"
 
-#define ACCESS_KEY_WORKD "file"
-/*
- * create 
- */
-Access *access_file_create(char *access_path);
-
-char *access_file_match_keyword(void);
 
 
 #ifdef __cplusplus
@@ -48,10 +40,16 @@ extern "C"{
 #endif 
 
 
+Access *accesser_factory_create_a_acceser(char *access_path);
+
+
+
 #ifdef __cplusplus
 }
 #endif 
 
-#endif /*ACCESS_FILE_H*/
+
+#endif /*ACCESS_FACTORY_H*/
+
 
 

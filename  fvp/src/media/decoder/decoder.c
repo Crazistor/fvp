@@ -31,28 +31,15 @@
 
 
 #include "decoder.h"
-#include "hi_common.h"
-#include "hi_comm_video.h"
-#include "hi_comm_sys.h"
-#include "hi_comm_vo.h"
-#include "hi_comm_vi.h"
-#include "hi_comm_vpp.h"
-#include "hi_comm_venc.h"
-#include "hi_comm_vdec.h"
-#include "mpi_vb.h"
-#include "mpi_sys.h"
-#include "mpi_vi.h"
-#include "mpi_vo.h"
-#include "mpi_vpp.h"
-#include "mpi_venc.h"
-#include "mpi_vdec.h"
 #include "fvp_msg.h"
+
 
 struct _Decoder
 {
 	int vde_chn_id;	
 	int max_pic_width;
 	int max_pic_height;
+
 
 };
 
@@ -85,7 +72,7 @@ static int create_vdec_chn(Decoder *thiz, PAYLOAD_TYPE_E enType)
 			return -1;	  
 		}
 	}
-//	s32ret = HI_MPI_VDEC_CreateChn(thiz->vde_chn_id, &stAttr, NULL);
+	s32ret = HI_MPI_VDEC_CreateChn(thiz->vde_chn_id, &stAttr, NULL);
 	if (HI_SUCCESS != s32ret)
 	{
 		msg_dbg("HI_MPI_VDEC_CreateChn failed errno 0x%x \n", s32ret);
@@ -114,16 +101,6 @@ Decoder *decoder_create(int vdec_chn, int max_pic_width, int max_pic_height)
 
 	create_vdec_chn(thiz, PT_H264);
 
-#if 0
-    /*bind vdec to vo*/
-    if (HI_SUCCESS != HI_MPI_VDEC_BindOutput(VdChn, VoDev, VoChn))
-    {
-        printf("HI_MPI_VDEC_BindOutput err\n");
-        return HI_FAILURE;
-#endif
-
-	
-	
 	return thiz;
 }
 
@@ -156,7 +133,6 @@ int decoder_control(Decoder *thiz, int i_query, va_list args)
 	
 	return 0;
 }
-
 
 void decoder_destroy(Decoder *thiz)
 {
