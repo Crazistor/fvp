@@ -1,3 +1,0 @@
-[Alarm]
-IsAlarmOpen= 10
-IsMotionAlarmOpen=0
