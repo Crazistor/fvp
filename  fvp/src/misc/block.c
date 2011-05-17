@@ -72,7 +72,6 @@ Block *block_realloc(Block *thiz, ssize_t prebody, int len)
 	return new_block;
 }
 
-
 void block_destroy(Block *thiz)
 {
 	if(thiz)

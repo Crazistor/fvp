@@ -41,7 +41,7 @@
 struct _MediaPlayer
 {	
 	Access *access;
-	Decoder *decoder;
+	VideoDecoder *video_decoder;
 	VideoWindows *windows;
 	int vochn;		
 	fvp_mutex_t lock;
@@ -82,7 +82,7 @@ static int decoder_wait(MediaPlayer *thiz)
 {
 	while(1)
 	{
-		if(video_decoder_able_to_decode_next_data(thiz->decoder))
+		if(video_decoder_able_to_decode_next_data(thiz->video_decoder))
 		{
 			break;
 		}	
@@ -113,7 +113,7 @@ static void *media_play_thread(void *para)
 				if(block->frame_flag == VIDEO_FRAME_FLAG)
 				{
 					/*handle the  video frame data*/
-					video_decoder_decode_data(thiz->decoder, block);
+					video_decoder_decode_data(thiz->video_decoder, block);
 					decoder_wait(thiz);
 				}
 				else if(block->frame_flag == AUDIO_FRAME_FLAG)
@@ -158,8 +158,8 @@ MediaPlayer *media_player_create(int vdec_chn,
 	
 	return_val_if_failed(thiz->access != NULL, NULL);
 	
-	thiz->decoder = video_decoder_create(vdec_chn, out_rect.u32Width, out_rect.u32Height);
-	return_val_if_failed(thiz->decoder != NULL, NULL);
+	thiz->video_decoder = video_decoder_create(vdec_chn, out_rect.u32Width, out_rect.u32Height);
+	return_val_if_failed(thiz->video_decoder != NULL, NULL);
 	thiz->windows = windows;
 	if(thiz->windows != NULL)
 	{
@@ -182,7 +182,7 @@ void media_player_destroy(MediaPlayer *thiz)
 		msg_dbg("Fun[%s]\n", __func__);
 
 		access_destroy(thiz->access);
-		video_decoder_destroy(thiz->decoder);
+		video_decoder_destroy(thiz->video_decoder);
 		
 		if(thiz->windows != NULL)
 		{
