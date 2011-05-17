@@ -49,6 +49,7 @@
 #include "hi_comm_sys.h"
 #include "hi_comm_vo.h"
 #include "hi_comm_vi.h"
+#include "hi_comm_aio.h"
 #include "hi_comm_vpp.h"
 #include "hi_comm_venc.h"
 #include "hi_comm_vdec.h"

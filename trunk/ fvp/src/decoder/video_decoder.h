@@ -52,34 +52,34 @@ enum _DecoderQuery
 };
 
 
-struct _Decoder;
-typedef struct _Decoder Decoder;
+struct _VideoDecoder;
+typedef struct _VideoDecoder VideoDecoder;
 
 /*
  *video  decoder create
  */
-Decoder *video_decoder_create(int vdec_chn, int max_pic_width, int max_pic_height);
+VideoDecoder *video_decoder_create(int vdec_chn, int max_pic_width, int max_pic_height);
 
 /*
  *  input parameter: block  video 
  */
-int video_decoder_decode_data(Decoder *thiz, Block *block);
+int video_decoder_decode_data(VideoDecoder *thiz, Block *block);
 
 /*
   * return  true  --video decoder can read next frame
  		 false -- video decoder can't read next frame
  */
-bool video_decoder_able_to_decode_next_data(Decoder *thiz);
+bool video_decoder_able_to_decode_next_data(VideoDecoder *thiz);
 
 /*
   * controld the video decoder
   */
-int video_decoder_control(Decoder *thiz, int i_query, va_list args);
+int video_decoder_control(VideoDecoder *thiz, int i_query, va_list args);
 
 /*
  * destroy the video decoder 
  */
-void video_decoder_destroy(Decoder *thiz);
+void video_decoder_destroy(VideoDecoder *thiz);
 
 
 #ifdef  __cplusplus

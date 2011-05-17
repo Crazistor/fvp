@@ -34,14 +34,14 @@
 #include "fvp_msg.h"
 
 
-struct _Decoder
+struct _VideoDecoder
 {
 	int vde_chn_id;	
 	int max_pic_width;
 	int max_pic_height;
 };
 
-static int create_vdec_chn(Decoder *thiz, PAYLOAD_TYPE_E enType)
+static int create_vdec_chn(VideoDecoder *thiz, PAYLOAD_TYPE_E enType)
 {	
 	return_val_if_failed(thiz != NULL, -1);
 	
@@ -96,7 +96,7 @@ static int create_vdec_chn(Decoder *thiz, PAYLOAD_TYPE_E enType)
 	return s32ret != HI_SUCCESS? 0:-1;	
 }
 
-static int vdec_chn_bind_output_chn(Decoder *thiz)
+static int vdec_chn_bind_output_chn(VideoDecoder *thiz)
 {
 	return_val_if_failed(thiz != NULL, -1);
 
@@ -104,13 +104,13 @@ static int vdec_chn_bind_output_chn(Decoder *thiz)
 }
 
 
-Decoder *video_decoder_create(int vdec_chn, int max_pic_width, int max_pic_height)
+VideoDecoder *video_decoder_create(int vdec_chn, int max_pic_width, int max_pic_height)
 {
-	Decoder *thiz = NULL;
+	VideoDecoder *thiz = NULL;
 
 	msg_dbg("fun[%s] vdec_chn(%d), width(%d), height(%d)\n", __func__, vdec_chn, max_pic_width, max_pic_height);
 
-	thiz = (Decoder *)COMM_ZALLOC(sizeof(Decoder));
+	thiz = (VideoDecoder *)COMM_ZALLOC(sizeof(VideoDecoder));
 
 	thiz->vde_chn_id = vdec_chn;
 	thiz->max_pic_width = max_pic_width;
@@ -123,7 +123,7 @@ Decoder *video_decoder_create(int vdec_chn, int max_pic_width, int max_pic_heigh
 
 unsigned char g_buffer[124] = {1};
 
-int video_decoder_decode_data(Decoder *thiz, Block *block)
+int video_decoder_decode_data(VideoDecoder *thiz, Block *block)
 {
 	HI_S32 s32ret;
 	
@@ -141,7 +141,7 @@ int video_decoder_decode_data(Decoder *thiz, Block *block)
 	return (s32ret == HI_SUCCESS)?0:-1;
 }
 
-bool video_decoder_able_to_decode_next_data(Decoder *thiz)
+bool video_decoder_able_to_decode_next_data(VideoDecoder *thiz)
 {
 	if(thiz)
 	{
@@ -167,7 +167,7 @@ bool video_decoder_able_to_decode_next_data(Decoder *thiz)
 
 
 
-int video_decoder_control(Decoder *thiz, int i_query, va_list args)
+int video_decoder_control(VideoDecoder *thiz, int i_query, va_list args)
 {
 	return_val_if_failed(thiz != NULL, -1);
 	
@@ -187,7 +187,7 @@ int video_decoder_control(Decoder *thiz, int i_query, va_list args)
 	return 0;
 }
 
-void video_decoder_destroy(Decoder *thiz)
+void video_decoder_destroy(VideoDecoder *thiz)
 {
 	if(thiz)
 	{

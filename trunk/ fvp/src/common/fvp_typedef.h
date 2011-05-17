@@ -135,10 +135,6 @@ typedef enum _VideoResolution
 
 
 
-
-
-
-
 #ifdef __cplusplus
 }
 #endif
