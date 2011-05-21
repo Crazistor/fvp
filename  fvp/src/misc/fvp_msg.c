@@ -37,8 +37,6 @@
 #include<fcntl.h>
 #include"fvp_msg.h"
 
-
-
 #define MSG_BUFFER_SIZE 1024
 
 static int msg_handle(const char* format, va_list ap)
@@ -62,8 +60,5 @@ void msg_dbg(char *format, ...)
 
 	return;	
 }
-
-
-
 
 

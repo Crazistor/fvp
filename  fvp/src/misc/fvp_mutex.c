@@ -30,7 +30,7 @@
  */
 
 #include"fvp_mutex.h"
-#if 1
+
 void fvp_mutex_init(fvp_mutex_t *mutex)
 {
     pthread_mutex_init(mutex, NULL);   
@@ -45,7 +45,7 @@ void fvp_mutex_unlock(fvp_mutex_t *mutex)
 	
 	pthread_mutex_unlock(mutex);
 }
-#endif
+
 void fvp_mutex_destroy (fvp_mutex_t *mutex)
 {
     pthread_mutex_destroy( mutex );

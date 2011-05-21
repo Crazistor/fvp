@@ -43,15 +43,20 @@ extern "C"
 struct _AudioOutputDevice;
 typedef struct _AudioOutputDevice AudioOutputDevice;
 
+typedef enum _AudioBindType
+{
+	BIND_AUDIO_DECODE,
+	BIND_AUDIO_INPUT,
+	BIND_INVALID,
+}AudioBindType;
 
+AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channel,);
 
+int  audio_output_device_init(AudioOutputDevice*thiz,  PAYLOAD_TYPE_E playload_type);
 
+int audio_output_device_bind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn);
 
-AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id,
-														int ao_channel, 
-														PAYLOAD_TYPE_E playload_type);
-
-
+int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, int audio_input_chn);
 
 void audio_output_device_destroy(AudioOutputDevice *thiz);
 

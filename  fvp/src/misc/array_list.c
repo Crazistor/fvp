@@ -62,6 +62,10 @@ ArrayList *array_list_create()
 {
 	ArrayList *array_list = NULL;
 	array_list = (ArrayList *)COMM_ZALLOC(sizeof(ArrayList));
+	if(array_list == NULL)
+	{
+            msg_dbg("Fun[%s]error : not enough memory!\n", __func__);
+       }
 	
 	return array_list;
 }

@@ -93,10 +93,10 @@ int main(int argc, char *argv[])
 	int is_play_stoped = 0;
 
 	media_player_event_manager_register_listener(event_manager,
-																MEDIA_PLAYER_STOPED,
-																handle_media_play_stoped,
-																(void *)&is_play_stoped,
-																0);
+													MEDIA_PLAYER_STOPED,
+													handle_media_play_stoped,
+													(void *)&is_play_stoped,
+													0);
 	
 	media_player_play(player);
 

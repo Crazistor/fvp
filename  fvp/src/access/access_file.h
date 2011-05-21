@@ -35,17 +35,13 @@
 #include"access.h"
 
 #define ACCESS_KEY_WORKD "file"
-/*
- * create 
- */
-Access *access_file_create(char *access_path);
 
-char *access_file_match_keyword(void);
+Access *access_file_create(char *access_path);
 
 
 #ifdef __cplusplus
 extern "C"{
-#endif 
+#endif
 
 
 #ifdef __cplusplus

@@ -38,7 +38,6 @@
 
 struct _IniParser
 {	
-	char *a;
 	IniBuilder *builder;
 };
 

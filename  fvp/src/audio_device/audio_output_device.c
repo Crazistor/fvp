@@ -30,9 +30,17 @@
  
 struct _AudioOutputDevice
 {	
-	AUDIO_DEV ao_dev_id;
-	int ao_channel;
-	PAYLOAD_TYPE_E playload_type;
+    AUDIO_DEV ao_dev_id;
+    int ao_channel;
+
+    int is_init;    /*0 -- not inited  1 -- inited*/
+    
+    PAYLOAD_TYPE_E playload_type;
+
+    AudioBindType bind_type;
+    int bind_audio_dec_chn;
+    AUDIO_DEV ai_dev_id;
+    int bind_audio_input_chn;
 }
 
 
@@ -60,71 +68,120 @@ static int get_ao_dev_attr(PAYLOAD_TYPE_E playload_type, AIO_ATTR_S *aio_aattr)
         aio_aattr->u32PtNumPerFrm = 160;
     }
 
-	return 0;
+    return 0;
 }
 
 
-
-AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id,
-														int ao_channel, 
-														PAYLOAD_TYPE_E playload_type)
+AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channel)
 {
-	AudioOutputDevice *thiz = NULL;
-	
-	thiz = (AudioOutputDevice *)COMM_ALLOC(sizeof(AudioOutputDevice));
-	if(thiz == NULL)
-	{
-		msg_dbg("Fun[%s] error : not enough memory!\n", __func__);
-		return NULL;
-	}
+    AudioOutputDevice *thiz = NULL;
+
+    thiz = (AudioOutputDevice *)COMM_ZALLOC(sizeof(AudioOutputDevice));
+    if(thiz == NULL)
+    {
+        msg_dbg("Fun[%s] error : not enough memory!\n", __func__);
+        return NULL;
+    }
+
+    thiz->ao_dev_id = ao_dev_id;
+    thiz->ao_channel = ao_channel;
+    
+    return thiz;    
+}
 
 
-	thiz->ao_dev_id = ao_dev_id;
-	thiz->ao_channel = ao_channel;
-	thiz->playload_type = playload_type;
+int  audio_output_device_init(AudioOutputDevice*thiz,  PAYLOAD_TYPE_E playload_type)
+{
+    return_val_if_failed(thiz != NULL,  -1);
 
-	AIO_ATTR_S aio_aattr;
-	
-	get_ao_dev_attr(playload_type, &aio_aattr);
+    AIO_ATTR_S aio_aattr;
+    HI_S32 s32ret;
 
-
-	HI_S32 s32ret;
-	
+    thiz->playload_type = playload_type;
+    get_ao_dev_attr(playload_type, &aio_aattr);
+    
     s32ret = HI_MPI_AO_SetPubAttr(thiz->ao_dev_id, &aio_aattr);
     if(HI_SUCCESS != s32ret)
     {
-        printf("set ao %d attr err:0x%x\n", thiz->ao_dev_id,s32ret);
+        msg_dbg("set ao %d attr err:0x%x\n", thiz->ao_dev_id,s32ret);
         return NULL;
     }
-	
     s32ret = HI_MPI_AO_Enable(thiz->ao_dev_id);
     if(HI_SUCCESS != s32ret)
     {
-        printf("enable ao dev %d err:0x%x\n", thiz->ao_dev_id, s32ret);
+        msg_dbg("enable ao dev %d err:0x%x\n", thiz->ao_dev_id, s32ret);
         return NULL;
     }
     s32ret = HI_MPI_AO_EnableChn(thiz->ao_dev_id, thiz->ao_channel);
     if(HI_SUCCESS != s32ret)
     {
-        printf("enable ao chn %d err:0x%x\n", thiz->ao_channel, s32ret);
+        msg_dbg("enable ao chn %d err:0x%x\n", thiz->ao_channel, s32ret);
         return NULL;
     }
-	
-	return thiz;
+
+    return 0;
 }
 
+int audio_output_device_bind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn)
+{
+    return_val_if_failed(thiz != NULL, -1);
+
+    HI_S32 s32ret;
+
+    s32Ret = HI_MPI_AO_BindAdec(thiz->ao_dev_id, thiz->ao_channel, audio_decode_chn);
+    if (s32Ret != HI_SUCCESS)
+    {
+        msg_dbg("HI_MPI_AO_BindAdec %d attr err:0x%x\n", thiz->ao_dev_id,s32ret);
+        return -1;
+    }    
+
+    thiz->bind_type = BIND_AUDIO_DECODE;
+    thiz->bind_auio_dec_chn = audio_decode_chn;    
+
+    return 0;
+}
+
+int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, AUDIO_DEV ai_dev_id,  int audio_input_chn)
+{
+    return_val_if_failed(thiz != NULL, -1);
+
+    HI_S32 s32ret;
+
+    s32Ret = HI_MPI_AO_BindAi(thiz->ao_dev_id, thiz->ao_channel, ai_dev_id, audio_input_chn);
+    if (s32Ret != HI_SUCCESS)
+    {
+        msg_dbg("HI_MPI_AO_BindAdec %d attr err:0x%x\n", thiz->ao_dev_id,s32ret);
+        return -1;
+    }    
+
+    thiz->bind_type = BIND_AUDIO_INPUT;
+    thiz->ai_dev_id = ai_dev_id;
+    thiz->bind_audio_input_chn = audio_input_chn;
+    
+    return 0;
+}    
 
 void audio_output_device_destroy(AudioOutputDevice *thiz)
 {
-	if(thiz)
-	{
+    if(thiz)
+    {   
+        if(thiz->playload_type == BIND_AUDIO_DECODE)
+        {
+            HI_MPI_AO_UnBindAdec(thiz->ao_dev_id, thiz->ao_channel, thiz->bind_audio_dec_chn);
+        }
+        else if(thiz->playload_type == BIND_AUDIO_INPUT)
+        {
+            HI_MPI_AO_UnBindAi(thiz->ao_dev_id, thiz->ao_channel, thiz->ai_dev_id, thiz->bind_audio_input_chn);
+        }
+        
+        HI_MPI_AO_DisableChn(thiz->ao_dev_id, thiz->ao_channel);
+        HI_MPI_AO_Disable(thiz->ao_dev_id);
 
-	}
-	
-	return ;
+        COMM_ZFREE(thiz, sizeof(AudioOutputDevice));
+        
+    }
+    
+    return ;
 }
-
-
-
 
  

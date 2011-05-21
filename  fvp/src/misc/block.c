@@ -40,7 +40,7 @@ Block *block_create(size_t size)
 {
 	Block *thiz = NULL;
 
-	thiz = (Block *)COMM_ALLOC(sizeof(Block));
+	thiz = (Block *)COMM_ZALLOC(sizeof(Block));
 	
 	/*alloc a buffer */
 	uint8_t *buf = NULL;

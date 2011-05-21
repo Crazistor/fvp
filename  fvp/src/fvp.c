@@ -31,6 +31,27 @@
 #include"fvp.h"
 
 
+static int   fvp_ad_codec_init()
+{   
+    msg_dbg("Fun[%s]\n", __func__);
+
+    ADCodec *ad_codec = ad_codec_create();
+    fvp_set_ad_codec(ad_codec);
+    
+    return 0;
+}
+
+static int  fvp_audio_output_device_init(AUDIO_DEV ao_output_dev_id)
+{    
+    msg_dbg("Fun[%s]\n", __func__);
+    
+    AudioOutputDevice *audio_output_device = audio_output_device_create(ao_output_dev_id, 0);
+    
+    fvp_set_audio_output_device(audio_output_device);   
+
+    return 0;
+}
+
 static int fvp_windows_init(FvpConfigPara *config_para)
 {
 	msg_dbg("fvp_windows_init\n");
@@ -57,7 +78,7 @@ static int osd_layer_init()
 	
     for(i = 0; i < VO_DEV_BUTT; i++)
     {
-        sprintf(str,"/dev/fb%d", i);    
+            sprintf(str,"/dev/fb%d", i);    
         
 		FrameBufferFd = open(str, O_RDWR, 0);
 		if(FrameBufferFd < 0)
@@ -76,19 +97,23 @@ static int osd_layer_init()
 		FrameBufferFd = -1;
     }
 
-	return 0;	
+    return 0;	
 }
-
  
 int fvp_init(FvpConfigPara *config_para)
 {
-	osd_layer_init();
-	
-	mpp_system_init();
+    osd_layer_init();
 
-	fvp_windows_init(config_para);
-
-	return 0;
+    mpp_system_init();
+    
+    fvp_windows_init(config_para);
+    
+    fvp_audio_output_device_init(config_para->audio_output_dev);
+    
+    fvp_ad_codec_init();
+        
+   
+    return 0;
 }
 
 
@@ -96,25 +121,34 @@ int fvp_init(FvpConfigPara *config_para)
 void fvp_deinit(void)
 {
 	
-	if(fvp_default_hd_windows() != NULL)
-	{
-		video_windows_unref(fvp_default_hd_windows());
-	}
-	
-	if(fvp_default_ad_windows() != NULL)
-	{
-		video_windows_unref(fvp_default_ad_windows());
-	}
-	
-	if(fvp_default_sd_windows() != NULL)
-	{
-		video_windows_unref(fvp_default_sd_windows());
-	}
+    if(fvp_default_hd_windows() != NULL)
+    {
+    	video_windows_unref(fvp_default_hd_windows());
+    }
 
+    if(fvp_default_ad_windows() != NULL)
+    {
+    	video_windows_unref(fvp_default_ad_windows());
+    }
 
-	mpp_system_deinit();
+    if(fvp_default_sd_windows() != NULL)
+    {
+    	video_windows_unref(fvp_default_sd_windows());
+    }
 
-	return;
+    if(fvp_default_audio_output_device() != NULL)
+    {
+        audio_output_device_destroy(fvp_default_audio_output_device());
+    }
+
+    if(fvp_default_ad_codec() != NULL)
+    {
+        ad_codec_destroy(fvp_default_ad_codec());
+    }
+    
+    mpp_system_deinit();
+
+    return;
 }
 
 
