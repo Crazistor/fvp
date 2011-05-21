@@ -252,14 +252,14 @@ static void fvp_settings_builder_destroy(IniBuilder *thiz)
 		thiz->ref_count--;
 		if(thiz->ref_count <= 0)
 		{
-			COMM_ZFREE(thiz, sizeof(thiz) + sizeof(PrivInfo));
+			COMM_ZFREE(thiz, sizeof(IniBuilder) + sizeof(PrivInfo));
 		}
 	}
 }
 
 static IniBuilder *fvp_settings_builder_create(void)
 {
-	IniBuilder *thiz = COMM_ALLOC(sizeof(IniBuilder) + sizeof(PrivInfo)); 
+	IniBuilder *thiz = COMM_ZALLOC(sizeof(IniBuilder) + sizeof(PrivInfo)); 
 	if(thiz != NULL)
 	{
 		thiz->on_group = fvp_settings_builder_on_group;

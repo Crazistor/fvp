@@ -147,12 +147,12 @@ MediaPlayer *media_player_create(int vdec_chn,
 									VideoWindows *windows,
 									int vochn)
 {
-	MediaPlayer *thiz = (MediaPlayer *)COMM_ALLOC(sizeof(MediaPlayer));
-	if(thiz == NULL)
-	{
-		msg_dbg("Fun[%s] not enough memory!\n", __func__);
-		return NULL;
-	}
+    MediaPlayer *thiz = (MediaPlayer *)COMM_ZALLOC(sizeof(MediaPlayer));
+    if(thiz == NULL)
+    {
+    	msg_dbg("Fun[%s] not enough memory!\n", __func__);
+    	return NULL;
+    }
 
 	thiz->access = accesser_factory_create_a_accesser(access_path);
 	
@@ -195,10 +195,10 @@ void media_player_destroy(MediaPlayer *thiz)
 			media_player_event_manager_destroy(thiz->event_manager);
 		}
 
-		COMM_ZFREE(thiz, sizeof(*thiz));
-	}
-	
-	return;	
+    	COMM_ZFREE(thiz, sizeof(MediaPlayer));
+    }
+
+    return;	
 }
 
 int media_player_play(MediaPlayer *thiz)

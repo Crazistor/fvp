@@ -70,7 +70,7 @@ int media_player_event_manager_register_listener(MediaPlayerEventManager *thiz,
 {
 	return_val_if_failed(thiz != NULL, -1);
 
-	MediaPlayerEventListener *listener = (MediaPlayerEventListener *)COMM_ALLOC(sizeof(MediaPlayerEventListener));
+	MediaPlayerEventListener *listener = (MediaPlayerEventListener *)COMM_ZALLOC(sizeof(MediaPlayerEventListener));
 
 	listener->type = event_type;
 	listener->callback_func = callback;
@@ -120,7 +120,7 @@ void media_player_event_manager_destroy(MediaPlayerEventManager *thiz)
 			array_list_destroy(thiz->array);
 		}
 
-		COMM_ZFREE(thiz, sizeof(thiz));
+		COMM_ZFREE(thiz, sizeof(MediaPlayerEventManager));
 	}
 
 	return;

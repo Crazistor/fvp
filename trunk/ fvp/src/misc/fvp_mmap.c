@@ -51,7 +51,7 @@ FvpMmap* fvp_mmap_create(const char* filename, size_t offset, size_t size)
 	if(thiz->data == NULL || thiz->data == MAP_FAILED)
 	{
 		close(thiz->fd);
-		COMM_ZFREE(thiz, sizeof(*thiz));
+		COMM_ZFREE(thiz, sizeof(FvpMmap));
 	}
 	return thiz;
 }
@@ -77,7 +77,7 @@ void fvp_mmap_destroy(FvpMmap* thiz)
 		close(thiz->fd);
 		munmap(thiz->data, thiz->length);
 
-		COMM_ZFREE(thiz, sizeof(*thiz));
+		COMM_ZFREE(thiz, sizeof(FvpMmap));
 	}
 	return;
 }

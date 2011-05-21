@@ -33,53 +33,76 @@
  
 struct _FvpGlobals
 {
-	VideoWindows *hd_windows;		
-	VideoWindows *ad_windows;		
-	VideoWindows *sd_windows;
+    VideoWindows *hd_windows;		
+    VideoWindows *ad_windows;		
+    VideoWindows *sd_windows;
+    
+    AudioOutputDevice *audio_output_device;
+    
+    ADCodec *ad_codec;
+    
 }g_globals;
- 
- 
+
+
 VideoWindows *fvp_default_hd_windows(void)
 {
-	return g_globals.hd_windows;
+    return g_globals.hd_windows;
 }
 
 VideoWindows *fvp_default_ad_windows(void)
 {
-	return g_globals.ad_windows;
+    return g_globals.ad_windows;
 }
 
 VideoWindows *fvp_default_sd_windows(void)
 {
+    return g_globals.sd_windows;
+}
 
-	return g_globals.sd_windows;
+AudioOutputDevice *fvp_default_audio_output_device(void)
+{
+    return g_globals.audio_output_device;
+}
+
+ADCodec *fvp_default_ad_codec(void)
+{
+    return g_globals.ad_codec;
 }
 
 
 void *fvp_set_hd_windows(VideoWindows *hd_windows)
 {
-	g_globals.hd_windows = hd_windows;
+    g_globals.hd_windows = hd_windows;
 
-	return;
+    return;
 }
 
 
 void *fvp_set_ad_windows(VideoWindows *ad_windows)
 {
-	g_globals.ad_windows = ad_windows;
+    g_globals.ad_windows = ad_windows;
 
-	return;
+    return;
 }
 
 void *fvp_set_sd_windows(VideoWindows *sd_windows)
 {
-	g_globals.sd_windows = sd_windows;
+    g_globals.sd_windows = sd_windows;
 
-	return;
+    return;
 }
 
+void fvp_set_audio_output_device(AudioOutputDevice *audio_output_device)
+{
+    g_globals.audio_output_device = audio_output_device;
+    
+    return;
+}
 
+void fvp_set_ad_codec(ADCodec *ad_codec)
+{
+    g_globals.ad_codec = ad_codec;
 
- 
- 
+    return;
+}
 

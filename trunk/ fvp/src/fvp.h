@@ -37,6 +37,7 @@ extern "C"{
 #endif
 
 #include"fvp_common.h"
+#include"fvp_typedef.h"
 #include"access.h"
 #include"access_file.h"
 #include"access_avi.h"
@@ -46,16 +47,19 @@ extern "C"{
 #include"fvp_msg.h"
 #include"media_player_event_manager.h"
 #include"fvp_global.h"
-#include<stdbool.h>
+#include"ad_codec.h"
 
 	
 
 typedef struct  _FvpInitPara
 {
-	int video_channel_nums;	/*0, 4, 8, 16, 32*/
-	VO_INTF_SYNC_E hd_dev_resolution;	
-	VO_INTF_SYNC_E ad_dev_resolution;
-	VO_INTF_SYNC_E sd_dev_resolution;
+    int video_channel_nums;	/*0, 4, 8, 16, 32*/
+
+    VO_INTF_SYNC_E hd_dev_resolution;	
+    VO_INTF_SYNC_E ad_dev_resolution;
+    VO_INTF_SYNC_E sd_dev_resolution;
+    
+    AUDIO_DEV  audio_output_dev;   
 	
 }FvpConfigPara;
 

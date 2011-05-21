@@ -47,7 +47,6 @@ AudioDecoder *audio_decoder_create(int audio_dec_channel);
 /*decode the audio data*/
 int audio_decoder_decode_data(AudioDecoder *thiz, Block *block);
 
-
 /*destory the audio decoder*/
 void audio_decoder_destroy(AudioDecoder *thiz);
 
