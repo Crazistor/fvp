@@ -85,7 +85,14 @@ MediaPlayer *media_player_create(int vdec_chn,
 									char *access_path,
 									VideoWindows *windows,
 									int vochn);
-									
+
+/*
+ *set the media player voice status
+ *@parameter is_voice_enable true -- disable the voice  false -- enable the voice
+ *@return 0 -- success  
+*/
+int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable);
+
 
 /*start to play the record or net stream*/
 int media_player_play(MediaPlayer *thiz);

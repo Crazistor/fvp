@@ -27,9 +27,16 @@
  * 2011-5-17 zhoumin <dcdcmin@gmail.com> created
  *
  */
-
-
 #include"audio_decoder.h"
+
+
+#define AUDIO_ADPCM_TYPE ADPCM_TYPE_DVI4/* ADPCM_TYPE_IMA, ADPCM_TYPE_DVI4*/
+#define AUDIO_AAC_TYPE AAC_TYPE_AACLC   /* AAC_TYPE_AACLC, AAC_TYPE_EAAC, AAC_TYPE_EAACPLUS*/
+#define G726_BPS MEDIA_G726_16K         /* MEDIA_G726_16K, MEDIA_G726_24K ... */
+#define AMR_FORMAT AMR_FORMAT_MMS       /* AMR_FORMAT_MMS, AMR_FORMAT_IF1, AMR_FORMAT_IF2*/
+#define AMR_MODE AMR_MODE_MR74         /* AMR_MODE_MR122, AMR_MODE_MR102 ... */
+#define AMR_DTX 0
+
 
 struct  _AudioDecoder
 {
@@ -122,11 +129,18 @@ AudioDecoder *audio_decoder_create(int audio_dec_channel, PAYLOAD_TYPE_E payload
     return  thiz;
 }
 
+int audio_decoder_get_audio_decode_chn(AudioDecoder *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+		
+	return thiz->audio_decode_channel;
+}
+
 int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 {
 	return_val_if_failed(thiz != NULL, -1);
 
-       AUDIO_STREAM_S stAudioStream;    
+    AUDIO_STREAM_S stAudioStream;    
 	HI_S32 s32ret;
 	
 	stAudioStream.pStream = block->p_buffer;

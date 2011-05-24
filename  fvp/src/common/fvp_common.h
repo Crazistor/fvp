@@ -61,6 +61,7 @@
 #include "mpi_vpp.h"
 #include "mpi_venc.h"
 #include "mpi_vdec.h"
+#include "mpi_adec.h"
 #include "hifb.h"
 
 

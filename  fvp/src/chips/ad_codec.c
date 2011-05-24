@@ -30,6 +30,9 @@
  */
 
 #include"ad_codec.h"
+#include"tw2865.h"
+#include"tw2865_def.h" 
+
 
 struct _ADCodec
 {
@@ -47,7 +50,7 @@ ADCodec *ad_codec_create(void)
     fd = open(DEFAULT_AD_DEV_FILENAME, O_RDWR);
     if(fd < 0)
     {
-        msg_dbg("Fun[%s] error :open ad file(%s) failed!\n", __func__, DEFAULT_AD_DEV_FILENAME);
+        msg_dbg("Fun[%s] error :open ad file failed!\n", __func__);
         return NULL;
     }
 
@@ -60,7 +63,7 @@ ADCodec *ad_codec_create(void)
 int ad_codec_config_audio_rate(ADCodec *thiz, AUDIO_SAMPLE_RATE_E audio_sample_rate)
 {
     return_val_if_failed(thiz != NULL && thiz->ad_fd >= 0, -1);
-
+	
     tw2865_audio_samplerate samplerate;
 
     switch(audio_sample_rate)
@@ -89,7 +92,7 @@ int ad_codec_config_audio_rate(ADCodec *thiz, AUDIO_SAMPLE_RATE_E audio_sample_r
     if (ioctl(thiz->ad_fd, TW2865_SET_SAMPLE_RATE, &samplerate))
     {
         msg_dbg("ioctl TW2865_SET_SAMPLE_RATE err !!! \n");
-        close(fd);
+        close(thiz->ad_fd);
         return -1;
     }
  

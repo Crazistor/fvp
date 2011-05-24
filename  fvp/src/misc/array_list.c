@@ -65,7 +65,7 @@ ArrayList *array_list_create()
 	if(array_list == NULL)
 	{
             msg_dbg("Fun[%s]error : not enough memory!\n", __func__);
-       }
+	}
 	
 	return array_list;
 }

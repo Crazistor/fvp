@@ -37,10 +37,10 @@
 extern "C"{
 #endif
 
-
 #include"video_windows.h"
 #include"audio_output_device.h"
 #include"ad_codec.h"
+
 
 VideoWindows *fvp_default_hd_windows(void);
 VideoWindows *fvp_default_ad_windows(void);
@@ -48,9 +48,9 @@ VideoWindows *fvp_default_sd_windows(void);
 AudioOutputDevice *fvp_default_audio_output_device(void);
 ADCodec *fvp_default_ad_codec(void);
 
-void fvp_set_hd_windows(VideoWindows *vga_windows);
+void fvp_set_hd_windows(VideoWindows *hd_windows);
 void fvp_set_ad_windows(VideoWindows *ad_windows);
-void fvp_set_sd_windows(VideoWindows *bnc_windows);
+void fvp_set_sd_windows(VideoWindows *sd_windows);
 void fvp_set_audio_output_device(AudioOutputDevice *audio_output_device);
 void fvp_set_ad_codec(ADCodec *ad_codec);
 

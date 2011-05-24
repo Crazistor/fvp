@@ -50,7 +50,6 @@ typedef struct _WindowsPictureInfo
 	int video_input_dev;
 	int video_input_dev_channel;
 
-	
 }WindowsPictureInfo;
 
 
@@ -468,6 +467,7 @@ VideoWindows *video_windows_create(VO_DEV_E video_dev, VO_INTF_SYNC_E vo_system_
 int video_windows_set_display_mode(VideoWindows *thiz, VideoPictureMode picture_mode)
 {
 	return_val_if_failed(thiz != NULL , -1);
+	
 
 	return 0;
 }
@@ -507,7 +507,6 @@ int video_windows_picture_bind_video_input_chn(VideoWindows *thiz)
 
 	return 0;
 }
-
 
 
 int video_windows_pause_vo_channel(VideoWindows *thiz, int vo_channel)

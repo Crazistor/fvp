@@ -42,7 +42,12 @@ struct  _AudioDecoder;
 typedef struct _AudioDecoder AudioDecoder;
 
 /*create a audio decoder*/
-AudioDecoder *audio_decoder_create(int audio_dec_channel);
+AudioDecoder *audio_decoder_create(int audio_dec_channel, PAYLOAD_TYPE_E payload_type);
+
+/*
+ *@return the audiodecoder decode chn
+ */
+int audio_decoder_get_audio_decode_chn(AudioDecoder *thiz);
 
 /*decode the audio data*/
 int audio_decoder_decode_data(AudioDecoder *thiz, Block *block);
