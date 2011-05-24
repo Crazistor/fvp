@@ -44,6 +44,7 @@ struct _FvpGlobals
 }g_globals;
 
 
+
 VideoWindows *fvp_default_hd_windows(void)
 {
     return g_globals.hd_windows;
@@ -70,28 +71,28 @@ ADCodec *fvp_default_ad_codec(void)
 }
 
 
-void *fvp_set_hd_windows(VideoWindows *hd_windows)
+#if 1
+void fvp_set_hd_windows(VideoWindows *hd_windows)
 {
     g_globals.hd_windows = hd_windows;
 
     return;
 }
 
-
-void *fvp_set_ad_windows(VideoWindows *ad_windows)
+void fvp_set_ad_windows(VideoWindows *ad_windows)
 {
     g_globals.ad_windows = ad_windows;
 
     return;
 }
 
-void *fvp_set_sd_windows(VideoWindows *sd_windows)
+void fvp_set_sd_windows(VideoWindows *sd_windows)
 {
     g_globals.sd_windows = sd_windows;
 
     return;
 }
-
+#endif 
 void fvp_set_audio_output_device(AudioOutputDevice *audio_output_device)
 {
     g_globals.audio_output_device = audio_output_device;

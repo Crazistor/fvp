@@ -33,10 +33,10 @@
 
 #include"fvp_common.h"
 #include"fvp_typedef.h"
-
+#include"fvp_msg.h"
 
 #ifdef __cplusplus
-extern "C"
+extern "C"{
 #endif 
 
 
@@ -47,27 +47,23 @@ typedef enum _AudioBindType
 {
 	BIND_AUDIO_DECODE,
 	BIND_AUDIO_INPUT,
-	BIND_INVALID,
+	BIND_AUDIO_INVALID,
 }AudioBindType;
 
-AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channel,);
+AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channel);
 
 int  audio_output_device_init(AudioOutputDevice*thiz,  PAYLOAD_TYPE_E playload_type);
-
 int audio_output_device_bind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn);
+int audio_output_device_unbind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn);
 
-int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, int audio_input_chn);
+int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, AUDIO_DEV ai_dev_id,  int audio_input_chn);
 
 void audio_output_device_destroy(AudioOutputDevice *thiz);
 
 
-
-
 #ifdef __cplusplus
-extern "C"
+}
 #endif 
-
-
 
 #endif /*AUDIO_OUTPUT_DEVICE_H*/
  

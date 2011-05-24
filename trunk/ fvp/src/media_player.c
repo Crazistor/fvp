@@ -37,17 +37,25 @@
 #include"fvp_msg.h"
 #include"fvp_function.h"
 #include"access_factory.h"
+#include"audio_decoder.h"
+#include"audio_output_device.h"
 
 struct _MediaPlayer
 {	
 	Access *access;
+	
 	VideoDecoder *video_decoder;
+	AudioDecoder *audio_decoder;
 	VideoWindows *windows;
 	int vochn;		
+	bool is_voice_enable;
+	
 	fvp_mutex_t lock;
+	
 	MedaPlayerState state;
 	InputState input_control_state;
 	MediaPlayerEventManager *event_manager;
+
 };
 
 static int media_player_internal_control(MediaPlayer *thiz, int query, va_list args)
@@ -165,7 +173,11 @@ MediaPlayer *media_player_create(int vdec_chn,
 	{
 		video_windows_ref(thiz->windows);
 	}
+	thiz->audio_decoder = audio_decoder_create(0, PT_ADPCMA);
+	
 	thiz->vochn = vochn;
+	thiz->is_voice_enable = false;
+	
 	thiz->state = MEDIA_NOT_START;
 	thiz->input_control_state = INIT_S;
 	fvp_mutex_init(&thiz->lock);
@@ -183,10 +195,12 @@ void media_player_destroy(MediaPlayer *thiz)
 
 		access_destroy(thiz->access);
 		video_decoder_destroy(thiz->video_decoder);
+
+		media_player_is_voice_enable(thiz, false);
+		audio_decoder_destroy(thiz->audio_decoder);
 		
 		if(thiz->windows != NULL)
 		{
-		
 			video_windows_unref(thiz->windows);
 		}
 		
@@ -194,11 +208,44 @@ void media_player_destroy(MediaPlayer *thiz)
 		{
 			media_player_event_manager_destroy(thiz->event_manager);
 		}
+		
 
     	COMM_ZFREE(thiz, sizeof(MediaPlayer));
     }
 
     return;	
+}
+
+
+int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	if(thiz->is_voice_enable == is_voice_enable)
+	{
+		return 0;
+	}
+
+	int ret = -1;
+	
+	if(is_voice_enable)
+	{
+		ret = audio_output_device_bind_decode_chn(fvp_default_audio_output_device(),  
+											audio_decoder_get_audio_decode_chn(thiz->audio_decoder));	
+	}
+	else 
+	{
+		ret = audio_output_device_unbind_decode_chn(fvp_default_audio_output_device(), 
+												audio_decoder_get_audio_decode_chn(thiz->audio_decoder));
+		
+	}
+
+	if(ret == 0)
+	{
+		thiz->is_voice_enable = is_voice_enable;
+	}
+	
+	return ret;
 }
 
 int media_player_play(MediaPlayer *thiz)
@@ -319,7 +366,5 @@ MediaPlayerEventManager *media_player_get_event_manager(MediaPlayer *thiz)
 
 	return thiz->event_manager;
 }
-
-
 
 

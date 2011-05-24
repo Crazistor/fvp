@@ -34,6 +34,7 @@
 
 #include"fvp_common.h"
 #include"fvp_typedef.h"
+#include"fvp_msg.h"
 
 #ifdef __cplusplus
 extern "C"{
