@@ -52,10 +52,10 @@ typedef void (*AccessDestroy)(Access *thiz);
 
 struct _Access
 {
-	AccessSeek seek;
+    AccessSeek seek;
     AccessBlock block;
     AccessRead read;
-	AccessControl control;
+    AccessControl control;
     AccessDestroy destroy;
     struct
     {
@@ -78,12 +78,12 @@ struct _Access
  */
 static inline int access_read(Access *thiz, uint8_t *buffer, size_t len)
 {	
-	if(thiz != NULL && thiz->read != NULL )
-	{
-		return thiz->read(thiz, buffer, len);
-	}
+    if(thiz != NULL && thiz->read != NULL )
+    {
+	return thiz->read(thiz, buffer, len);
+    }
 	
-	return -1;	
+    return -1;	
 }
 
 /*
@@ -91,7 +91,7 @@ static inline int access_read(Access *thiz, uint8_t *buffer, size_t len)
  */
 static inline void access_seek(Access *thiz, unsigned long pos)
 {
-	return_if_failed(thiz != NULL);
+    return_if_failed(thiz != NULL);
 	
     return thiz->seek(thiz,  pos);
 }
@@ -101,7 +101,7 @@ static inline void access_seek(Access *thiz, unsigned long pos)
  */
 static inline void access_control(Access *thiz, int query, va_list args)
 {	
-	return_if_failed(thiz != NULL);
+    return_if_failed(thiz != NULL);
 
     return thiz->control(thiz, query, args);
 }
@@ -110,11 +110,10 @@ static inline void access_control(Access *thiz, int query, va_list args)
 /*
  * read a block and return the block
  */
-static inline Block *access_block(Access *thiz)
+static inline Block *access_block(Access *thiz
 {	
-	return_val_if_failed(thiz != NULL && thiz->block != NULL, NULL);
+    return_val_if_failed(thiz != NULL && thiz->block != NULL, NULL);
 
-	
     return thiz->block(thiz);
 }
 
@@ -128,8 +127,8 @@ static inline void access_destroy(Access *thiz)
     {
         thiz->destroy(thiz);
     }
-    
-	return;
+	    
+    return;
 }
 
 
