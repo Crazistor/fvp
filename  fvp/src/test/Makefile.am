@@ -1,8 +1,8 @@
 include $(abs_top_srcdir)/src/rules.mk
 
-noinst_PROGRAMS=mpp_media_test video_windows_test access_avi_test  access_file_test  ad_codec_test
+noinst_PROGRAMS=media_play_test video_windows_test access_avi_test  access_file_test  ad_codec_test
 
-mpp_media_test_SOURCES=mpp_media_test.c
+meida_play_test_SOURCES=media_play.c
 mpp_media_test_LDFLAGS=-lm -lpthread $(top_srcdir)/src/.libs/libmedia.a $(MYLDFLAGS)
 
 video_windows_test_SOURCES=video_windows_test.c
