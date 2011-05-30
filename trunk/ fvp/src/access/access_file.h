@@ -43,12 +43,6 @@ extern "C"{
 Access *access_file_create(char *access_path);
 
 
-<<<<<<< .mine
-=======
-#ifdef __cplusplus
-extern "C"{
-#endif
->>>>>>> .r89
 
 
 #ifdef __cplusplus
