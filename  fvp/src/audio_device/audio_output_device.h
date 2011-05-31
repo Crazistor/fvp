@@ -60,7 +60,6 @@ int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, AUDIO_DEV ai_dev
 
 void audio_output_device_destroy(AudioOutputDevice *thiz);
 
-
 #ifdef __cplusplus
 }
 #endif 

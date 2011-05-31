@@ -52,6 +52,11 @@ int audio_decoder_get_audio_decode_chn(AudioDecoder *thiz);
 /*decode the audio data*/
 int audio_decoder_decode_data(AudioDecoder *thiz, Block *block);
 
+/*
+ *@return the audio decode playload type
+ */
+int audio_decoder_get_playload_type(AudioDecoder *thiz);
+
 /*destory the audio decoder*/
 void audio_decoder_destroy(AudioDecoder *thiz);
 

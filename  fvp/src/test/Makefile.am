@@ -1,9 +1,9 @@
 include $(abs_top_srcdir)/src/rules.mk
 
-noinst_PROGRAMS=media_play_test video_windows_test access_avi_test  access_file_test  ad_codec_test
+noinst_PROGRAMS=video_windows_test access_avi_test  access_file_test  ad_codec_test media_play_test
 
-meida_play_test_SOURCES=media_play.c
-mpp_media_test_LDFLAGS=-lm -lpthread $(top_srcdir)/src/.libs/libmedia.a $(MYLDFLAGS)
+media_play_test_SOURCES=media_play_test.c
+media_play_test_LDFLAGS=-lm -lpthread $(top_srcdir)/src/.libs/libmedia.a $(MYLDFLAGS)
 
 video_windows_test_SOURCES=video_windows_test.c
 video_windows_test_LDFLAGS=-lm -lpthread $(top_srcdir)/src/.libs/libmedia.a $(MYLDFLAGS)

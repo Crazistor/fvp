@@ -97,6 +97,7 @@ static Block *access_avi_block(Access *thiz)
 		else
 		{
 			printf("not define this stream!\n");
+			
 		}
 	}		
 

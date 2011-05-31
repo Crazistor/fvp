@@ -51,7 +51,8 @@ static int create_audio_decode_chn(int audio_dec_channel, PAYLOAD_TYPE_E payload
 
     attr.enType = payload_type;
     attr.u32BufSize = 20;
-    attr.enMode = ADEC_MODE_STREAM;/* propose use pack mode in your app */
+//    attr.enMode = ADEC_MODE_STREAM;/* propose use pack mode in your app */
+	attr.enMode = ADEC_MODE_PACK;
         
     if (PT_ADPCMA == attr.enType)
     {
@@ -145,14 +146,23 @@ int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 	
 	stAudioStream.pStream = block->p_buffer;
 	stAudioStream.u32Len = block->buffer_len;
+	stAudioStream.u64TimeStamp = 0;
 	s32ret = HI_MPI_ADEC_SendStream(thiz->audio_decode_channel, &stAudioStream, HI_IO_BLOCK);
 	if(s32ret != HI_SUCCESS)
 	{
-		msg_dbg("send audio stream err s32Ret(0x%x)\n", s32ret);
+		msg_dbg("Send audio stream err s32Ret(0x%x)\n", s32ret);
 		return -1;
 	}
 	
 	return 0;
+}
+
+
+int audio_decoder_get_playload_type(AudioDecoder *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	return thiz->decode_payload_type;
 }
 
 void audio_decoder_destroy(AudioDecoder *thiz)

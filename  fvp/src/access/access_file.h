@@ -44,7 +44,6 @@ Access *access_file_create(char *access_path);
 
 
 
-
 #ifdef __cplusplus
 }
 #endif 

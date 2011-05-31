@@ -126,8 +126,8 @@ static void *media_play_thread(void *para)
 				}
 				else if(block->frame_flag == AUDIO_FRAME_FLAG)
 				{
-					
-				}	
+					audio_decoder_decode_data(thiz->audio_decoder, block);
+				}
 			}
 			else
 			{
@@ -135,6 +135,10 @@ static void *media_play_thread(void *para)
 				msg_dbg("read file over or get a error!\n");
 				break;
 			}
+		}
+		else
+		{
+			thiz->state = MEDIA_PAUSED;
 		}
 	}
 	PROFILE_END("Decode video Over or get a error!\n");
@@ -173,7 +177,7 @@ MediaPlayer *media_player_create(int vdec_chn,
 	{
 		video_windows_ref(thiz->windows);
 	}
-	thiz->audio_decoder = audio_decoder_create(0, PT_ADPCMA);
+	thiz->audio_decoder = audio_decoder_create(vochn, PT_AMR);
 	
 	thiz->vochn = vochn;
 	thiz->is_voice_enable = false;
@@ -193,6 +197,12 @@ void media_player_destroy(MediaPlayer *thiz)
 	{
 		msg_dbg("Fun[%s]\n", __func__);
 
+		thiz->input_control_state = PAUSE_S;
+		while(thiz->state != MEDIA_PAUSED)
+		{
+			usleep(100);	
+		}
+		
 		access_destroy(thiz->access);
 		video_decoder_destroy(thiz->video_decoder);
 
@@ -209,7 +219,6 @@ void media_player_destroy(MediaPlayer *thiz)
 			media_player_event_manager_destroy(thiz->event_manager);
 		}
 		
-
     	COMM_ZFREE(thiz, sizeof(MediaPlayer));
     }
 
@@ -359,7 +368,6 @@ int media_player_control(MediaPlayer *thiz, int query, ...)
     return res;
 }
 
-
 MediaPlayerEventManager *media_player_get_event_manager(MediaPlayer *thiz)
 {
 	return_val_if_failed(thiz != NULL, NULL);
@@ -367,4 +375,10 @@ MediaPlayerEventManager *media_player_get_event_manager(MediaPlayer *thiz)
 	return thiz->event_manager;
 }
 
+PAYLOAD_TYPE_E media_player_get_audio_playload_type(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL && thiz->audio_decoder != NULL, -1);
+
+	return audio_decoder_get_playload_type(thiz->audio_decoder);
+}
 
