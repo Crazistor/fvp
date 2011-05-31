@@ -41,7 +41,7 @@ static int   fvp_ad_codec_init()
     return 0;
 }
 
-static int  fvp_audio_output_device_init(AUDIO_DEV ao_output_dev_id)
+static int fvp_audio_output_device_init(AUDIO_DEV ao_output_dev_id)
 {    
     msg_dbg("Fun[%s]\n", __func__);
     
@@ -111,16 +111,12 @@ int fvp_init(FvpConfigPara *config_para)
     fvp_audio_output_device_init(config_para->audio_output_dev);
     
     fvp_ad_codec_init();
-        
    
     return 0;
 }
 
-
-
 void fvp_deinit(void)
 {
-	
     if(fvp_default_hd_windows() != NULL)
     {
     	video_windows_unref(fvp_default_hd_windows());

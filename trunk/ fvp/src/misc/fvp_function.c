@@ -73,7 +73,6 @@ void public_msleep(unsigned int milli_second)
     time.tv_usec = milli_second* 1000 % 1000000;
 
     select(0, NULL, NULL, NULL, &time);
-
 }
 
 /*

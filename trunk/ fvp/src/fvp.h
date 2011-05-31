@@ -49,8 +49,6 @@ extern "C"{
 #include"fvp_global.h"
 #include"ad_codec.h"
 
-	
-
 typedef struct  _FvpInitPara
 {
     int video_channel_nums;	/*0, 4, 8, 16, 32*/
@@ -66,8 +64,6 @@ typedef struct  _FvpInitPara
 int fvp_init(FvpConfigPara *config_para);
 
 void fvp_deinit(void);
-
-
 
 
 #ifdef __cplusplus

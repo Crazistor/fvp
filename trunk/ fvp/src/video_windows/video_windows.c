@@ -588,6 +588,6 @@ void video_windows_unref(VideoWindows *thiz)
 		}
 	}
 	
-	return 0;
+	return;
 }
 

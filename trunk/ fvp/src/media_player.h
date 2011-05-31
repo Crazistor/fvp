@@ -120,6 +120,12 @@ int media_player_stop(MediaPlayer *thiz);
 
 MediaPlayerEventManager *media_player_get_event_manager(MediaPlayer *thiz);
 
+
+/*
+ * @return  the audio decode playload type 
+ */
+PAYLOAD_TYPE_E media_player_get_audio_playload_type(MediaPlayer *thiz);
+
 												
 /*destroy a media player*/
 void media_player_destroy(MediaPlayer *thiz);
