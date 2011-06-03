@@ -116,6 +116,11 @@ void video_windows_ref(VideoWindows *thiz);
 void video_windows_unref(VideoWindows *thiz);
 
 
+int video_windows_get_display_rate(VideoWindows *thiz);
+
+int video_windows_set_display_rate(VideoWindows *thiz, int vo_chn, int display_rate);
+
+
 #ifdef __cplusplus
 }
 #endif

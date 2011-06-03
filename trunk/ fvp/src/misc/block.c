@@ -57,19 +57,36 @@ Block *block_create(size_t size)
 	thiz->p_buffer = buf;
 	thiz->buffer_len = 0;
 	thiz->alloc_size = size;
+	thiz->pts = 0;
 	
 	return thiz;
 }
 
 
-Block *block_realloc(Block *thiz, ssize_t prebody, int len)
+Block *block_realloc(Block *thiz, int new_size)
 {
 	return_val_if_failed(thiz != NULL, NULL);
 
-	Block *new_block = NULL;
+	/*free the block p_buffer*/
+	if(thiz->p_buffer != NULL)
+	{
+		COMM_ZFREE(thiz->p_buffer, ALIGN(thiz->alloc_size));
+		thiz->alloc_size = 0;
+	}
 
+	/*alloc a new buffer*/
+	uint8_t *buf = NULL;
+	buf = COMM_ALLOC(ALIGN(new_size));
+	if(buf == NULL)
+	{
+		msg_dbg("error: not enough memory!\n");
+		return NULL;
+	}
 	
-	return new_block;
+	thiz->p_buffer = buf;
+	thiz->alloc_size = new_size;
+	
+	return thiz;
 }
 
 void block_destroy(Block *thiz)

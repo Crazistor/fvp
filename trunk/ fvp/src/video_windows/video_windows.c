@@ -446,7 +446,6 @@ VideoWindows *video_windows_create(VO_DEV_E video_dev, VO_INTF_SYNC_E vo_system_
 	thiz->vo_dev = video_dev;
 	thiz->vo_system_sync = vo_system_sync;
 	thiz->cur_pic_numbers = max_chn_numbers;
-	thiz->display_rate = 30;
 
 	get_width_height_by_resolution(vo_system_sync, &thiz->windows_width, &thiz->windows_height, &thiz->display_rate);
 	
@@ -527,8 +526,6 @@ int video_windows_pause_vo_channel(VideoWindows *thiz, int vo_channel)
 
 int video_windows_resume_vo_channel(VideoWindows *thiz, int vo_channel)
 {
-	msg_dbg("video_windows_resume_vo_channel\n");
-
 	return_val_if_failed(thiz != NULL, -1);
 
 	if(video_windows_check_vo_decode_channel(thiz, vo_channel) != 0)
@@ -590,4 +587,31 @@ void video_windows_unref(VideoWindows *thiz)
 	
 	return;
 }
+
+
+int video_windows_get_display_rate(VideoWindows *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	return thiz->display_rate;
+}
+
+
+int video_windows_set_display_rate(VideoWindows *thiz, int vo_chn, int display_rate)
+{
+	return_val_if_failed(thiz != NULL && display_rate > 0, -1);
+	
+    HI_S32 s32Ret = HI_SUCCESS;
+	s32Ret = HI_MPI_VO_SetChnFrameRate(thiz->vo_dev, vo_chn,display_rate);
+	if(s32Ret != HI_SUCCESS)
+	{
+        msg_dbg("HI_MPI_VO_SetChnFrameRate fail 0x%08x.\n", s32Ret);
+        return -1;
+	}
+	
+	return 0;
+}
+
+
+
 

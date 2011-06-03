@@ -83,6 +83,7 @@ static Block *access_avi_block(Access *thiz)
 			memcpy(priv->block->p_buffer, packet.data, packet.size);
 			priv->block->buffer_len = packet.size;
 			priv->block->frame_flag = VIDEO_FRAME_FLAG;
+//			priv->block->pts = packet.pts;
 			av_free_packet(&packet);
 			return priv->block;
 		}	
@@ -91,13 +92,13 @@ static Block *access_avi_block(Access *thiz)
 			memcpy(priv->block->p_buffer, packet.data, packet.size);
 			priv->block->buffer_len = packet.size;
 			priv->block->frame_flag = AUDIO_FRAME_FLAG;
+//			priv->block->pts = packet.pts;			
 			av_free_packet(&packet);
 			return priv->block;
 		}
 		else
 		{
 			printf("not define this stream!\n");
-			
 		}
 	}		
 
@@ -140,6 +141,9 @@ static int access_init_ffmpeg(Access *thiz, char *file_path)
     }
     
 	dump_format(pFormatCtx, 0, file_path, 0);
+
+
+	printf("access_init_ffmpeg audio code id(%d)\n", pFormatCtx->audio_codec_id);
 
 	int i;
 	AVCodecContext *pCodecCtx;

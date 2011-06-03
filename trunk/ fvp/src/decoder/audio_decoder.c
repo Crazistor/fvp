@@ -146,7 +146,7 @@ int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 	
 	stAudioStream.pStream = block->p_buffer;
 	stAudioStream.u32Len = block->buffer_len;
-	stAudioStream.u64TimeStamp = 0;
+	stAudioStream.u64TimeStamp = block->pts;
 	s32ret = HI_MPI_ADEC_SendStream(thiz->audio_decode_channel, &stAudioStream, HI_IO_BLOCK);
 	if(s32ret != HI_SUCCESS)
 	{
