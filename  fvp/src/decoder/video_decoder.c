@@ -130,7 +130,7 @@ int video_decoder_decode_data(VideoDecoder *thiz, Block *block)
 	VDEC_STREAM_S stStream;
 	stStream.pu8Addr = block->p_buffer;
 	stStream.u32Len = block->buffer_len;
-	stStream.u64PTS = 0;	
+	stStream.u64PTS = block->pts;	
 	
 	s32ret = HI_MPI_VDEC_SendStream(thiz->vde_chn_id, &stStream, HI_IO_NOBLOCK);
 	if (HI_SUCCESS != s32ret)
@@ -199,4 +199,7 @@ void video_decoder_destroy(VideoDecoder *thiz)
 	
 	return;
 }
+
+
+
 

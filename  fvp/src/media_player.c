@@ -58,6 +58,44 @@ struct _MediaPlayer
 
 };
 
+
+static int calc_play_rate(int base_rate, PlaySpeed speed, bool is_fast_play)
+{	
+	return_val_if_failed(base_rate > 0 , -1);
+
+	int rate = 0;
+	int n = 0;
+
+	switch(speed)
+	{
+		case SPEED_2X:
+			n = 2;
+			break;
+		case SPEED_4X:
+			n = 4;
+			break;
+		case SPEED_8X:
+			n = 8;
+			break;
+		default:
+			msg_dbg("fun[%s] error : can't go to here! not define!\n", __func__);
+			n = 2;
+			break;
+	}
+	
+	if(is_fast_play)
+	{
+		rate = 	base_rate*n;
+	}
+	else
+	{
+		rate = base_rate/n;
+	}
+	
+	return rate;
+}
+
+
 static int media_player_internal_control(MediaPlayer *thiz, int query, va_list args)
 {
 	return_val_if_failed(thiz != NULL && query < QUERY_INVALID, -1);
@@ -177,7 +215,7 @@ MediaPlayer *media_player_create(int vdec_chn,
 	{
 		video_windows_ref(thiz->windows);
 	}
-	thiz->audio_decoder = audio_decoder_create(vochn, PT_AMR);
+	thiz->audio_decoder = audio_decoder_create(vdec_chn, PT_AMR);
 	
 	thiz->vochn = vochn;
 	thiz->is_voice_enable = false;
@@ -187,6 +225,8 @@ MediaPlayer *media_player_create(int vdec_chn,
 	fvp_mutex_init(&thiz->lock);
 	
 	thiz->event_manager = media_player_event_manager_create();
+
+	video_windows_picture_bind_decode_chn(thiz->windows, vochn, vdec_chn);
 	
 	return thiz;		
 }
@@ -275,9 +315,10 @@ int media_player_play(MediaPlayer *thiz)
 	else
 	{
 		/*change the play state*/
-		if(thiz->state == MEDIA_PAUSED)
+//		if(thiz->state == MEDIA_PAUSED)
 		{			
 			video_windows_resume_vo_channel(thiz->windows, thiz->vochn);
+			video_windows_set_display_rate(thiz->windows, thiz->vochn, video_windows_get_display_rate(thiz->windows));
 			thiz->state = MEDIA_PLAYING;
 		}
 	}
@@ -328,29 +369,59 @@ int media_player_frame_play(MediaPlayer *thiz)
 	msg_dbg("Fun[%s]\n", __func__);
 
 	video_windows_step_vo_channel(thiz->windows, thiz->vochn);	
+
+	thiz->state = MEDIA_FRAME_PLAY;
 	
 	fvp_mutex_unlock(&thiz->lock);
 	
 	return 0;
 }
 
-int media_player_fast_play(MediaPlayer *thiz)
+
+int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed)
 {
 	return_val_if_failed(thiz != NULL, -1);
 
 	msg_dbg("Fun[%s]\n", __func__);
+
+	if(thiz->state == MEDIA_NOT_START)
+	{
+		msg_dbg("fun[%s] error : not start to replay!\n");
+		return -1;
+	}
 	
-	return 0;
+	int rate = 0;
+	int ret = -1;
+	
+	video_windows_resume_vo_channel(thiz->windows, thiz->vochn);
+
+	rate = calc_play_rate(video_windows_get_display_rate(thiz->windows), speed, true);
+	ret = video_windows_set_display_rate(thiz->windows, thiz->vochn, rate);
+	
+	printf("Fun[%s] display rate(%d)\n", __func__, rate);
+	
+	return ret;
 }
 
 
-int media_player_slow_play(MediaPlayer *thiz)
+int media_player_slow_play(MediaPlayer *thiz, PlaySpeed speed)
 {
 	return_val_if_failed(thiz != NULL, -1);
-
-	msg_dbg("Fun[%s]\n", __func__);
 	
-	return 0;
+	if(thiz->state == MEDIA_NOT_START)
+	{
+		msg_dbg("fun[%s] error : not start to replay!\n");
+		return -1;
+	}
+	int rate = 0;
+	
+	video_windows_resume_vo_channel(thiz->windows, thiz->vochn);
+	
+	rate = calc_play_rate(video_windows_get_display_rate(thiz->windows), speed, true);
+
+	printf("Fun[%s] display rate(%d)\n", __func__, rate);
+	
+	return video_windows_set_display_rate(thiz->windows, thiz->vochn, rate);
 }
 
 

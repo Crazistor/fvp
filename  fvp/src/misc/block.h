@@ -52,20 +52,21 @@ struct _Block
 	int alloc_size;
 	size_t buffer_len;
 	int frame_flag;
+	unsigned long long pts;
 	unsigned char  *p_buffer;
 };
 
 /*
- * creatre a block , alloc size memory to store data
+ *@size thel alloc block size
+ *@return the block
  */
 Block *block_create(size_t size);
 
-
 /*
- * 
+ * @new_size the block alloc size
+ * @return the block 
  */
-Block *block_realloc(Block *thiz, ssize_t prebody, int len);
-
+Block *block_realloc(Block *thiz, int new_size);
 
 /*
  * destroy the block  

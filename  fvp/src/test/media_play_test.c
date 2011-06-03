@@ -40,7 +40,7 @@
 FvpConfigPara g_config_para = {.video_channel_nums = 4, 
 							.hd_dev_resolution = VO_OUTPUT_PAL,
 							.ad_dev_resolution = VO_OUTPUT_PAL,
-							.sd_dev_resolution = VO_OUTPUT_PAL,
+							.sd_dev_resolution = VO_OUTPUT_NTSC,
 		};
 
 
@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 	fvp_init(&g_config_para);
 
 	int vdec_chn= 0;
+	int vo_chn = 0;
 	RECT_S out_rect = {	.s32X = 0,
 						.s32Y = 0,
 						.u32Width = 720,
@@ -81,16 +82,13 @@ int main(int argc, char *argv[])
 	char access_path[128] = {0};
 	
 	sprintf(access_path, "file:%s", argv[1]);
-	player = media_player_create(vdec_chn, out_rect, access_path, fvp_default_sd_windows(), 0);
+	player = media_player_create(vdec_chn, out_rect, access_path, fvp_default_sd_windows(), vo_chn);
 
 	audio_output_device_init(fvp_default_audio_output_device(), media_player_get_audio_playload_type(player));
 	ad_codec_config_audio_rate(fvp_default_ad_codec(), AUDIO_SAMPLE_RATE_8000);	
 
-	audio_output_device_bind_decode_chn(fvp_default_audio_output_device(), 0);
-	
-	video_windows_picture_bind_decode_chn(fvp_default_sd_windows(), 0, vdec_chn);	
-
-	
+	audio_output_device_bind_decode_chn(fvp_default_audio_output_device(), vdec_chn);
+		
 	MediaPlayerEventManager *event_manager = media_player_get_event_manager(player);
 	int is_play_stoped = 0;
 
@@ -114,7 +112,9 @@ int main(int argc, char *argv[])
 		printf("q ------- quit\n"
 			   "a ------- play\n"
 		       "p ------- pause\n"
-		       "s ------- frame play");
+		       "s ------- frame play\n"
+		       "f ------- fast play\n"
+		       "m ------- slow play\n");
 
 		p = getchar();
 		
@@ -135,6 +135,15 @@ int main(int argc, char *argv[])
 		{
 			media_player_frame_play(player);
 		}
+		else if(p == 'f')
+		{
+			media_player_fast_play(player, SPEED_8X);
+		}
+		else if(p == 'm')
+		{
+			media_player_slow_play(player, SPEED_8X);
+		}
+		
 		
 	}
 
