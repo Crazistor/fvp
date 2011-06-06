@@ -32,14 +32,14 @@
 #ifndef MEDIA_PLAYER_EVENT_MANAGER_H
 #define MEDIA_PLAYER_EVENT_MANAGER_H
 
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 #include"fvp_common.h"
 #include"array_list.h"
 
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 struct _MediaPlayerEventManager;
 typedef struct _MediaPlayerEventManager MediaPlayerEventManager;
