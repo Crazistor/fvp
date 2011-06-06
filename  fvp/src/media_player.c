@@ -323,7 +323,7 @@ int media_player_play(MediaPlayer *thiz)
 		}
 	}
 
-	/*if the state is pause, then change to play status*/
+	/*if the state is pause, then change to play state*/
 	fvp_mutex_unlock(&thiz->lock);
 	
 	return 0;
@@ -381,8 +381,6 @@ int media_player_frame_play(MediaPlayer *thiz)
 int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed)
 {
 	return_val_if_failed(thiz != NULL, -1);
-
-	msg_dbg("Fun[%s]\n", __func__);
 
 	if(thiz->state == MEDIA_NOT_START)
 	{

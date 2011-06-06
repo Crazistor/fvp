@@ -43,11 +43,15 @@ extern "C"{
 struct _ADCodec;
 typedef struct _ADCodec ADCodec;
 
+/*create*/
 ADCodec *ad_codec_create(void);
-void ad_codec_destroy(ADCodec *thiz);
 
-/*audio  config rate*/
+/*audio  config rate
+ *@audio_sample_rate the audio_sample_rate */
 int ad_codec_config_audio_rate(ADCodec *thiz, AUDIO_SAMPLE_RATE_E audio_sample_rate);
+
+/*destroy */
+void ad_codec_destroy(ADCodec *thiz);
 
 
 #ifdef __cplusplus
