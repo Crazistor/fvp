@@ -99,10 +99,8 @@ MediaPlayer *media_player_create(int vdec_chn,
 */
 int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable);
 
-/*start to play the record or net stream*/
 int media_player_play(MediaPlayer *thiz);
 
-/*pause the media play*/
 int media_player_pause(MediaPlayer *thiz);
 
 int media_player_frame_play(MediaPlayer *thiz);
@@ -111,6 +109,17 @@ int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed);
 
 int media_player_slow_play(MediaPlayer *thiz, PlaySpeed speed);
 
+int media_player_get_file_size(MediaPlayer *thiz);
+
+int media_player_get_position(MediaPlayer *thiz);
+
+int media_player_set_position(MediaPlayer *thiz, int position);
+
+int media_player_get_total_time(MediaPlayer *thiz);
+
+int media_player_get_cur_time(MediaPlayer *thiz);
+
+int media_player_set_cur_time(MediaPlayer *thiz, int time);
 
 /**
  * Control function for media player.

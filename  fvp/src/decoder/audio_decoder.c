@@ -141,9 +141,9 @@ int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 {
 	return_val_if_failed(thiz != NULL, -1);
 
-    AUDIO_STREAM_S stAudioStream;    
+	AUDIO_STREAM_S stAudioStream;    
 	HI_S32 s32ret;
-	
+
 	stAudioStream.pStream = block->p_buffer;
 	stAudioStream.u32Len = block->buffer_len;
 	stAudioStream.u64TimeStamp = block->pts;
@@ -153,7 +153,7 @@ int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 		msg_dbg("Send audio stream err s32Ret(0x%x)\n", s32ret);
 		return -1;
 	}
-	
+
 	return 0;
 }
 

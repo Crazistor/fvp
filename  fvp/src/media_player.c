@@ -55,9 +55,7 @@ struct _MediaPlayer
 	MedaPlayerState state;
 	InputState input_control_state;
 	MediaPlayerEventManager *event_manager;
-
 };
-
 
 static int calc_play_rate(int base_rate, PlaySpeed speed, bool is_fast_play)
 {	
@@ -422,6 +420,71 @@ int media_player_slow_play(MediaPlayer *thiz, PlaySpeed speed)
 	return video_windows_set_display_rate(thiz->windows, thiz->vochn, rate);
 }
 
+int media_player_get_file_size(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+	
+	if(thiz->access && thiz->state != MEDIA_NOT_START)
+	{
+		return thiz->access->info.file_size;
+	}
+
+	return -1;
+}
+
+int media_player_get_position(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	if(thiz->access && thiz->state != MEDIA_NOT_START)
+	{
+		return thiz->access->info.i_pos;
+	}
+	
+	return -1;
+}
+
+int media_player_set_position(MediaPlayer *thiz, int position)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	msg_dbg("Fun(%s) handle \n", __func__);
+	
+	return 0;
+}
+
+int media_player_get_total_time(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	if(thiz->access && thiz->state != MEDIA_NOT_START)
+	{
+		return thiz->access->info.total_seconds;
+	}
+
+	return -1;
+}
+
+int media_player_get_cur_time(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	if(thiz->access && thiz->state != MEDIA_NOT_START)
+	{
+		return thiz->access->info.cur_seconds;
+	}
+
+	return -1;
+}
+
+int media_player_set_cur_time(MediaPlayer *thiz, int time)
+{
+	return_val_if_failed(thiz != NULL, -1);
+
+	msg_dbg("Fun(%s) handle \n", __func__);
+
+	return 0;
+}
 
 int media_player_control(MediaPlayer *thiz, int query, ...)
 {
