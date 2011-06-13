@@ -34,6 +34,7 @@
 #include"fvp_typedef.h"
 #include"fvp_common.h"
 #include"block.h"
+#include"fvp_msg.h"
 #include<stdarg.h>
 
 #ifdef __cplusplus
@@ -59,19 +60,16 @@ struct _Access
     AccessDestroy destroy;
     struct
     {
-        unsigned int i_update;  /* Access sets them on change,
-                                   Input removes them once take into account*/
-        uint64_t     i_size;    /* Write only for access, read only for input */
-        uint64_t     i_pos;     /* idem */
-        bool         b_eof;     /* idem */
+        int file_size; /*Video file size*/
+		int i_pos;	  
 
-        int          i_title;    /* idem, start from 0 (could be menu) */
-        int          i_seekpoint;/* idem, start from 0 */
+       	int total_seconds; /*file time length*/
+       	int cur_seconds;   /*current play file time*/	
+
+       	bool b_eof;
     } info;
     char priv[0];
 };
-
-
 
 /*
  * read a data from the access
@@ -105,7 +103,6 @@ static inline void access_control(Access *thiz, int query, va_list args)
 
     return thiz->control(thiz, query, args);
 }
-
  
 /*
  * read a block and return the block

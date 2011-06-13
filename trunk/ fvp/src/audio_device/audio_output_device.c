@@ -80,7 +80,7 @@ AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channe
     thiz = (AudioOutputDevice *)COMM_ZALLOC(sizeof(AudioOutputDevice));
     if(thiz == NULL)
     {
-//        msg_dbg("Fun[%s] error : not enough memory!\n", __func__);
+        msg_dbg("Fun[%s] error : not enough memory!\n", __func__);
         return NULL;
     }
 

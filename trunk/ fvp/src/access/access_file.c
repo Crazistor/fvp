@@ -75,7 +75,7 @@ static Block* access_file_block(Access *thiz)
 #else 
 	int ret = 0;
 	int frame_size = 0;
-	char buf[12] = {0};
+	
 	ret = read(priv->fd, &frame_size, 4);
 	if(ret !=  4)
 	{
