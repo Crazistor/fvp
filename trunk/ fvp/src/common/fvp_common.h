@@ -63,6 +63,7 @@
 #include "mpi_vdec.h"
 #include "mpi_adec.h"
 #include "hifb.h"
+#include "fvp_util.h"
 
 
 #ifdef __cplusplus
@@ -74,10 +75,10 @@ extern "C"{
 
 #ifdef FVP_PROFILE
 static size_t profile_begin;
-#define PROFILE_START() profile_begin = get_relative_time();
+#define PROFILE_START() profile_begin = fvp_get_relative_time();
 #define PROFILE_END(what) msg_dbg("%s:%d %s cost %d ms\n", __func__, __LINE__, \
-	what, get_relative_time() - profile_begin);
-#define PROFILE_TIME(what) msg_dbg("%s:%d %s time=%d\n", __func__, __LINE__, what, get_relative_time());
+	what, fvp_get_relative_time() - profile_begin);
+#define PROFILE_TIME(what) msg_dbg("%s:%d %s time=%d\n", __func__, __LINE__, what, fvp_get_relative_time());
 #else
 #define PROFILE_START()
 #define PROFILE_END(what)

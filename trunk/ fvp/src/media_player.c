@@ -35,10 +35,10 @@
 #include"video_decoder.h"
 #include"fvp_lock.h"
 #include"fvp_msg.h"
-#include"fvp_function.h"
 #include"access_factory.h"
 #include"audio_decoder.h"
 #include"audio_output_device.h"
+#include"fvp_util.h"
 
 struct _MediaPlayer
 {	
@@ -307,7 +307,7 @@ int media_player_play(MediaPlayer *thiz)
 	if(thiz->state == MEDIA_NOT_START)
 	{
 		/*create a thread */
-		create_normal_thread(media_play_thread, (void *)thiz, NULL);
+		fvp_create_normal_thread(media_play_thread, (void *)thiz, NULL);
 		thiz->state = MEDIA_PLAYING;
 	}
 	else
@@ -321,7 +321,7 @@ int media_player_play(MediaPlayer *thiz)
 		}
 	}
 
-	/*if the state is pause, then change to play state*/
+	/*if the state is pause, then change to play status*/
 	fvp_mutex_unlock(&thiz->lock);
 	
 	return 0;
@@ -379,6 +379,8 @@ int media_player_frame_play(MediaPlayer *thiz)
 int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed)
 {
 	return_val_if_failed(thiz != NULL, -1);
+
+	msg_dbg("Fun[%s]\n", __func__);
 
 	if(thiz->state == MEDIA_NOT_START)
 	{
@@ -477,7 +479,7 @@ int media_player_get_cur_time(MediaPlayer *thiz)
 	return -1;
 }
 
-int media_player_set_cur_time(MediaPlayer *thiz, int time)
+int media_player_seek_time(MediaPlayer *thiz, int time)
 {
 	return_val_if_failed(thiz != NULL, -1);
 

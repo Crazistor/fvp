@@ -12,8 +12,6 @@ MISC_SRC=$(srcdir)/misc/array_list.c \
 		 $(srcdir)/misc/array_list.h \
 		 $(srcdir)/misc/block.c \
 		 $(srcdir)/misc/block.h \
-		 $(srcdir)/misc/fvp_function.c\
-		 $(srcdir)/misc/fvp_function.h \
 		 $(srcdir)/misc/fvp_lock.c \
 		 $(srcdir)/misc/fvp_lock.h \
 		 $(srcdir)/misc/fvp_mmap.c \
@@ -56,7 +54,8 @@ libmedia_la_SOURCES = mpp_system.c \
 					./fvp.c \
 					./fvp.h \
 					./fvp_global.c \
-					./fvp_global.h 
+					./fvp_global.h 	\
+					./util/fvp_util.c 
 
 
 libmedia_la_SOURCES +=$(COMMON_HEADER) $(MISC_SRC)	
@@ -74,7 +73,6 @@ media_HEADERS=$(srcdir)/common/fvp_common.h \
 			  $(srcdir)/common/parameter_define.h \
 			 $(srcdir)/misc/array_list.h \
 			 $(srcdir)/misc/block.h \
-			 $(srcdir)/misc/fvp_function.h \
 		 $(srcdir)/misc/fvp_lock.h \
 		 $(srcdir)/misc/fvp_mmap.h \
 		 $(srcdir)/misc/fvp_msg.h \
@@ -96,6 +94,7 @@ media_HEADERS=$(srcdir)/common/fvp_common.h \
 		./audio_device/audio_output_device.h \
 		./fvp.h \
 		./fvp_global.h  \
+		./util/fvp_util.h \
 		$(top_srcdir)/driver/tw2865/tw2865.h \
 		$(top_srcdir)/driver/tw2865/tw2865_def.h 
 

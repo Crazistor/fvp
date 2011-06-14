@@ -601,7 +601,7 @@ int video_windows_set_display_rate(VideoWindows *thiz, int vo_chn, int display_r
 {
 	return_val_if_failed(thiz != NULL && display_rate > 0, -1);
 	
-	HI_S32 s32Ret = HI_SUCCESS;
+    HI_S32 s32Ret = HI_SUCCESS;
 	s32Ret = HI_MPI_VO_SetChnFrameRate(thiz->vo_dev, vo_chn,display_rate);
 	if(s32Ret != HI_SUCCESS)
 	{

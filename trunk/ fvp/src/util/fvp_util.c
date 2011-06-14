@@ -36,10 +36,10 @@
 #include<pthread.h>
 #include<error.h>
 #include<signal.h>
-#include"fvp_function.h"
+#include"fvp_util.h"
 
 
-Ret create_normal_thread(ThreadFunction function, void *para, pthread_t *pid)
+int fvp_create_normal_thread(ThreadFunction function, void *para, pthread_t *pid)
 {
 	return_val_if_failed(para != NULL, RET_INVALID_PARAMETER);	
 	
@@ -65,7 +65,7 @@ Ret create_normal_thread(ThreadFunction function, void *para, pthread_t *pid)
 }
 
 
-void public_msleep(unsigned int milli_second)
+void fvp_msleep(unsigned int milli_second)
 {
 	struct timeval time;
 
@@ -78,7 +78,7 @@ void public_msleep(unsigned int milli_second)
 /*
  * get the file size
  */
-int public_get_file_size(char *file_name)
+int fvp_get_file_size(char *file_name)
 {
 	return_val_if_failed(file_name != NULL, -1);
 
@@ -97,7 +97,7 @@ int public_get_file_size(char *file_name)
 }
 
 
-size_t get_relative_time(void)
+size_t fvp_get_relative_time(void)
 {
 	struct timeval now = {0};
 	gettimeofday(&now, NULL);
