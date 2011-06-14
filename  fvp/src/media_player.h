@@ -119,7 +119,7 @@ int media_player_get_total_time(MediaPlayer *thiz);
 
 int media_player_get_cur_time(MediaPlayer *thiz);
 
-int media_player_set_cur_time(MediaPlayer *thiz, int time);
+int media_player_seek_time(MediaPlayer *thiz, int time);
 
 /**
  * Control function for media player.

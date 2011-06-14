@@ -32,8 +32,8 @@
 #include"fvp_typedef.h"
 #include<pthread.h>
 
-#ifndef FVP_FUNCTION_H
-#define FVP_FUNCTION_H
+#ifndef FVP_UTIL_H
+#define FVP_UTIL_H
 
 
 #ifdef __cplusplus 
@@ -42,16 +42,13 @@ extern "C"{
 
 typedef void *(*ThreadFunction)(void *para);
 
-Ret create_normal_thread(ThreadFunction function, void *para, pthread_t *pid);
-
-void public_msleep(unsigned int milli_second);
-
-int public_get_file_size(char *file_name);
-
-size_t get_relative_time(void);
+int fvp_create_normal_thread(ThreadFunction function, void *para, pthread_t *pid);
+void fvp_msleep(unsigned int milli_second);
+int fvp_get_file_size(char *file_name);
+size_t fvp_get_relative_time(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif/*__FVP_FUNCTION_H__*/
+#endif/*__FVP_UTIL_H*/
