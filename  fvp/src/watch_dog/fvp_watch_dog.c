@@ -2,7 +2,7 @@
 #include"fvp_common.h"
 #include"fvp_util.h"
 
-struct _FvpWatchDog
+struct _FvpWatchDogServers
 {
 	ArrayList *monitor_list;
 	fvp_mutex_t monitor_list_lock;	
@@ -13,7 +13,7 @@ static void *feed_dog_thread_entry(void *para)
 {
 	return_val_if_failed(para != NULL, NULL);
 
-	FvpWatchDog *thiz = (FvpWatchDog *)para;
+	FvpWatchDogServers *thiz = (FvpWatchDogServers *)para;
 	ArrayList *monitor_list = NULL;
 	int monitor_nums = 0;
 	int i = 0;
@@ -43,11 +43,11 @@ static void *feed_dog_thread_entry(void *para)
 	return NULL;
 }
 
-FvpWatchDog *fvp_watch_dog_create()
+FvpWatchDogServers *fvp_watch_dog_servers_create()
 {	
-	FvpWatchDog *thiz = NULL;
+	FvpWatchDogServers *thiz = NULL;
 
-	thiz = (FvpWatchDog *)COMM_ALLOC(sizeof(FvpWatchDog));
+	thiz = (FvpWatchDogServers *)COMM_ALLOC(sizeof(FvpWatchDogServers));
 	if(thiz == NULL)
 	{
 		msg_dbg("Fun(%s) error : not enough memory\n", __func__);
@@ -62,7 +62,7 @@ FvpWatchDog *fvp_watch_dog_create()
 	return thiz;
 }		
 
-int fvp_watch_dog_add_monitor(FvpWatchDog *thiz, FvpMonitor *monitor)
+int fvp_watch_dog_servers_add_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor)
 {
 	return_val_if_failed(thiz != NULL && monitor != NULL, -1);
 
@@ -76,7 +76,7 @@ int fvp_watch_dog_add_monitor(FvpWatchDog *thiz, FvpMonitor *monitor)
 	return 0;
 }
 
-int fvp_watch_dog_remove_monitor(FvpWatchDog *thiz, FvpMonitor *monitor)
+int fvp_watch_dog_servers_remove_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor)
 {
 	return_val_if_failed(thiz != NULL && monitor != NULL, -1);
 
@@ -87,7 +87,7 @@ int fvp_watch_dog_remove_monitor(FvpWatchDog *thiz, FvpMonitor *monitor)
 	return 0;
 }
 
-void fvp_watch_dog_destroy(FvpWatchDog *thiz)
+void fvp_watch_dog_servers_destroy(FvpWatchDogServers *thiz)
 {
 	if(thiz)
 	{
