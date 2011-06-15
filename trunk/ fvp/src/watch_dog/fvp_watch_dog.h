@@ -34,20 +34,31 @@
 
 #include"fvp_monitor.h"
 
+
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-struct _FvpWatchDog;
-typedef _FvpWatchDog FvpWatchDog;
+struct _FvpWatchDogServers;
+typedef _FvpWatchDogServers FvpWatchDogServers;
 
-FvpWatchDog *fvp_watch_dog_create();
+/*create a watch dog service*/
+FvpWatchDogServers *fvp_watch_dog_servers_create();
 
-int fvp_watch_dog_add_monitor(FvpWatchDog *thiz, FvpMonitor *monitor);
+/*add a monitor to the watch dog service
+ *@monitor :the  moudule monitor 
+ *@retrun 0 success , -1 failed
+ */
+int fvp_watch_dog_servers_add_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor);
 
-int fvp_watch_dog_remove_monitor(FvpWatchDog *thiz, FvpMonitor *monitor);
+/*remove the monitor frome the watch dog service
+ *@monitor:the module monitor
+ *@return 0 success, -1 failed
+ */
+int fvp_watch_dog_servers_remove_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor);
 
-void fvp_watch_dog_destroy(FvpWatchDog *thiz);
+/*destory the  watch dog service */
+void fvp_watch_dog_servers_destroy(FvpWatchDogServers *thiz);
 
 
 #ifdef __cplusplus
