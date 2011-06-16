@@ -30,8 +30,8 @@
  */
 
 
-#ifndef FVP_LOCK_H
-#define FVP_LOCK_H
+#ifndef FVP_MUTEX_H
+#define FVP_MUTEX_H
 
 #include"fvp_common.h"
 
@@ -46,11 +46,12 @@ typedef pthread_mutex_t fvp_mutex_t;
 void fvp_mutex_init(fvp_mutex_t *mutex);
 void fvp_mutex_lock(fvp_mutex_t *mutex);
 void fvp_mutex_unlock(fvp_mutex_t *mutex);
+void fvp_mutex_destroy (fvp_mutex_t *mutex);
 
 
 #ifdef __cplusplus
 }
 #endif 
 
-#endif /*FVP_LOCK_H*/
+#endif /*FVP_MUTEX_H*/
 

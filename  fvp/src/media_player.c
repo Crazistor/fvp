@@ -33,12 +33,12 @@
 #include"media_player.h"
 #include"access_file.h"
 #include"video_decoder.h"
-#include"fvp_lock.h"
 #include"fvp_msg.h"
 #include"access_factory.h"
 #include"audio_decoder.h"
 #include"audio_output_device.h"
 #include"fvp_util.h"
+#include"fvp_mutex.h"
 
 struct _MediaPlayer
 {	
@@ -246,7 +246,8 @@ void media_player_destroy(MediaPlayer *thiz)
 
 		media_player_is_voice_enable(thiz, false);
 		audio_decoder_destroy(thiz->audio_decoder);
-		
+
+		fvp_mutex_destroy(&thiz->lock);
 		if(thiz->windows != NULL)
 		{
 			video_windows_unref(thiz->windows);
@@ -294,6 +295,16 @@ int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable)
 	
 	return ret;
 }
+
+int media_player_set_volume(MediaPlayer *thiz, unsigned int volume)
+{
+	return_val_if_failed(thiz != NULL && volume <= 100, -1);
+
+	msg_dbg("Fun[%s]\n", __func__);
+
+	return 0;
+}
+
 
 int media_player_play(MediaPlayer *thiz)
 {
@@ -486,6 +497,19 @@ int media_player_seek_time(MediaPlayer *thiz, int time)
 	msg_dbg("Fun(%s) handle \n", __func__);
 
 	return 0;
+}
+
+
+bool media_player_is_playing(MediaPlayer *thiz)
+{
+	return_val_if_failed(thiz != NULL, false);
+
+	if(thiz->state != MEDIA_PAUSED && thiz->state != MEDIA_NOT_START && thiz->state != MEDIA_STOPPED)
+	{
+		return true;
+	}
+	
+	return false;
 }
 
 int media_player_control(MediaPlayer *thiz, int query, ...)

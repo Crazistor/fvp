@@ -29,18 +29,18 @@
  *
  */
 
-#ifndef FVP_WATCH_DOG_H
-#define FVP_WATCH_DOG_H
+#ifndef FVP_WATCH_DOG_SERVERS_H
+#define FVP_WATCH_DOG_SERVERS_H
 
+#include"fvp_common.h"
 #include"fvp_monitor.h"
-
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
 struct _FvpWatchDogServers;
-typedef _FvpWatchDogServers FvpWatchDogServers;
+typedef struct _FvpWatchDogServers FvpWatchDogServers;
 
 /*create a watch dog service*/
 FvpWatchDogServers *fvp_watch_dog_servers_create();

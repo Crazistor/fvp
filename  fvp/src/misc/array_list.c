@@ -70,9 +70,9 @@ ArrayList *array_list_create()
 	return array_list;
 }
 
-Ret array_list_add(ArrayList *thiz, void *data)
+int array_list_add(ArrayList *thiz, void *data)
 {
-	return_val_if_failed(thiz && data, RET_INVALID_PARAMETER);
+	return_val_if_failed(thiz && data, -1);
 
 	List *p = NULL;	
 	List *current = NULL;	
@@ -95,12 +95,12 @@ Ret array_list_add(ArrayList *thiz, void *data)
 
 	thiz->array_list_number++;
 
-	return RET_OK;
+	return 0;
 }
 
-Ret array_list_remove(ArrayList *thiz, void *data, int data_size)
+int array_list_remove(ArrayList *thiz, void *data, int data_size)
 {
-	return_val_if_failed(thiz && data && data_size > 0, RET_INVALID_PARAMETER);
+	return_val_if_failed(thiz && data && data_size > 0, -1);
 
 	List *p = thiz->header;
 
@@ -118,12 +118,13 @@ Ret array_list_remove(ArrayList *thiz, void *data, int data_size)
 				prev->next = p->next;
 			}
 			thiz->array_list_number--;
-			return RET_OK;
+			return 0;
 		}
 		prev = p;
 		p = p->next;		
 	}
-	return RET_FAILED;
+	
+	return -1;
 }	
 
 int array_list_get_id_by_data(ArrayList *thiz, void *data, int data_size)

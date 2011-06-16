@@ -99,6 +99,13 @@ MediaPlayer *media_player_create(int vdec_chn,
 */
 int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable);
 
+/*
+ * set the media player volume
+ * @volume (0-100) 100 -- max volume value 0 -- min volume value
+ * @return 0 set volume success , -1 set volume failed.
+ */
+int media_player_set_volume(MediaPlayer *thiz, unsigned int volume);
+
 int media_player_play(MediaPlayer *thiz);
 
 int media_player_pause(MediaPlayer *thiz);
@@ -120,6 +127,8 @@ int media_player_get_total_time(MediaPlayer *thiz);
 int media_player_get_cur_time(MediaPlayer *thiz);
 
 int media_player_seek_time(MediaPlayer *thiz, int time);
+
+bool media_player_is_playing(MediaPlayer *thiz);
 
 /**
  * Control function for media player.
