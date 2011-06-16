@@ -140,6 +140,11 @@ static inline char *comm_strdup(char *s)
 }
 
 
+#define TEST_BEGIN(test_module_name) 	printf("##############################%s##########################\n", test_module_name);
+
+#define TEST_END(test_module_name) 		printf("------------------------------%s--------------------------\n", test_module_name);
+
+
 
 
 #ifdef __cplusplus

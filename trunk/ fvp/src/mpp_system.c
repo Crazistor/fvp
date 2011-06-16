@@ -31,7 +31,7 @@
  
 
 #include"mpp_system.h"
-
+#include"fvp_msg.h"
 
 int mpp_system_init(void)
 {
