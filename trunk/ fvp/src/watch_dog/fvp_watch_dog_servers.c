@@ -4,12 +4,16 @@
 #include"array_list.h"
 #include"fvp_mutex.h"
 
-struct _FvpWatchDogServers
+typedef struct _FvpWatchDogServers
 {
 	ArrayList *monitor_list;
 	fvp_mutex_t monitor_list_lock;	
-};
+	
+	pthread_t feeddog_threadid;
+	
+}FvpWatchDogServers;
 
+static FvpWatchDogServers *watchdog_servers = NULL;
 
 static void *feed_dog_thread_entry(void *para)
 {
@@ -45,64 +49,71 @@ static void *feed_dog_thread_entry(void *para)
 	return NULL;
 }
 
-FvpWatchDogServers *fvp_watch_dog_servers_create()
-{	
-	FvpWatchDogServers *thiz = NULL;
 
-	thiz = (FvpWatchDogServers *)COMM_ALLOC(sizeof(FvpWatchDogServers));
-	if(thiz == NULL)
+int fvp_watch_dog_servers_init(void)
+{
+	watchdog_servers = (FvpWatchDogServers *)COMM_ALLOC(sizeof(FvpWatchDogServers));
+	if(watchdog_servers == NULL)
 	{
 		msg_dbg("Fun(%s) error : not enough memory\n", __func__);
-		return NULL;
+		return -1;
 	}
 	
-	thiz->monitor_list = array_list_create();
-	fvp_mutex_init(&thiz->monitor_list);
+	watchdog_servers->monitor_list = array_list_create();
+	fvp_mutex_init(&watchdog_servers->monitor_list);
 
 	fvp_api_wdt_open();
 	fvp_api_wdt_settimeout(10000);
 
-	fvp_create_normal_thread(feed_dog_thread_entry, (void *)thiz, NULL);
-	
-	return thiz;
-}		
+	fvp_create_normal_thread(feed_dog_thread_entry, (void *)watchdog_servers, &watchdog_servers->feeddog_threadid);
 
-int fvp_watch_dog_servers_add_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor)
-{
-	return_val_if_failed(thiz != NULL && monitor != NULL, -1);
+	msg_dbg("feed dog thread id(%d)\n", watchdog_servers->feeddog_threadid);
 	
-	fvp_mutex_lock(&thiz->monitor_list_lock);
-	array_list_add(thiz->monitor_list, (void *)monitor);
-	fvp_mutex_unlock(&thiz->monitor_list_lock);
-
 	return 0;
 }
 
-int fvp_watch_dog_servers_remove_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor)
+int fvp_watch_dog_servers_deinit(void)
 {
-	return_val_if_failed(thiz != NULL && monitor != NULL, -1);
-
-	fvp_mutex_lock(&thiz->monitor_list_lock);	
-	array_list_remove(thiz->monitor_list, (void *)monitor, sizeof(FvpMonitor));
-	fvp_mutex_unlock(&thiz->monitor_list_lock);
-
-	return 0;
-}
-
-void fvp_watch_dog_servers_destroy(FvpWatchDogServers *thiz)
-{
-	if(thiz)
+	if(watchdog_servers)
 	{
+		pthread_join(watchdog_servers->feeddog_threadid, NULL);
+		
 		fvp_api_wdt_close();
 		
-		fvp_mutex_destroy(&thiz->monitor_list_lock);
+		fvp_mutex_destroy(&watchdog_servers->monitor_list_lock);
 		
-		array_list_destroy(thiz->monitor_list);
+		array_list_destroy(watchdog_servers->monitor_list);
 
-		COMM_FREE(thiz);
+		COMM_FREE(watchdog_servers);
+		watchdog_servers = NULL;
+
+		return 0;
 	}
 	
-	return ;
+	return  -1;
 }
+
+int fvp_watch_dog_servers_add_monitor(FvpMonitor *monitor)
+{
+	return_val_if_failed(watchdog_servers != NULL && monitor != NULL, -1);
+	
+	fvp_mutex_lock(&watchdog_servers->monitor_list_lock);
+	array_list_add(watchdog_servers->monitor_list, (void *)monitor);
+	fvp_mutex_unlock(&watchdog_servers->monitor_list_lock);
+
+	return 0;
+}
+
+int fvp_watch_dog_servers_remove_monitor(FvpMonitor *monitor)
+{
+	return_val_if_failed(watchdog_servers != NULL && monitor != NULL, -1);
+
+	fvp_mutex_lock(&watchdog_servers->monitor_list_lock);	
+	array_list_remove(watchdog_servers->monitor_list, (void *)monitor, sizeof(FvpMonitor));
+	fvp_mutex_unlock(&watchdog_servers->monitor_list_lock);
+
+	return 0;
+}
+
 
 
