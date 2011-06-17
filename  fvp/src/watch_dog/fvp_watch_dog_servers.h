@@ -39,26 +39,23 @@
 extern "C"{
 #endif
 
-struct _FvpWatchDogServers;
-typedef struct _FvpWatchDogServers FvpWatchDogServers;
+/*init a watch dog servers module*/
+int fvp_watch_dog_servers_init(void);
 
-/*create a watch dog service*/
-FvpWatchDogServers *fvp_watch_dog_servers_create();
+/*deinit the watch dog servers module*/
+int fvp_watch_dog_servers_deinit(void);
 
 /*add a monitor to the watch dog service
  *@monitor :the  moudule monitor 
  *@retrun 0 success , -1 failed
  */
-int fvp_watch_dog_servers_add_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor);
+int fvp_watch_dog_servers_add_monitor(FvpMonitor *monitor);
 
 /*remove the monitor frome the watch dog service
  *@monitor:the module monitor
  *@return 0 success, -1 failed
  */
-int fvp_watch_dog_servers_remove_monitor(FvpWatchDogServers *thiz, FvpMonitor *monitor);
-
-/*destory the  watch dog service */
-void fvp_watch_dog_servers_destroy(FvpWatchDogServers *thiz);
+int fvp_watch_dog_servers_remove_monitor(FvpMonitor *monitor);
 
 
 #ifdef __cplusplus

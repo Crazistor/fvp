@@ -74,22 +74,21 @@ int main(int argc, char *argv[])
 {
 	TEST_BEGIN("Test watch dog servers");
 
-	FvpWatchDogServers *thiz = NULL;
 	FvpMonitor *monitor = NULL;
 
-	thiz = fvp_watch_dog_servers_create();
+	fvp_watch_dog_servers_init();
 	
 	monitor = monitor_create();
-	fvp_watch_dog_servers_add_monitor(thiz, monitor);
+	fvp_watch_dog_servers_add_monitor(monitor);
 
 	sleep(10);
 
-	fvp_watch_dog_servers_remove_monitor(thiz, monitor);
+	fvp_watch_dog_servers_remove_monitor(monitor);
 	fvp_monitor_destroy(monitor);
 	
 	sleep(25);
 	
-	fvp_watch_dog_servers_destroy(thiz);
+	fvp_watch_dog_servers_deinit();
 
 	TEST_END("Test watch dog servers");
 

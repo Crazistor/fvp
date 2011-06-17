@@ -19,6 +19,9 @@ AC_PROG_LIBTOOL
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile
-				 src/test/Makefile])
+				 src/test/Makefile
+				 src/hardware/test/Makefile])
+
+
 
 AC_OUTPUT
