@@ -33,14 +33,14 @@
 #ifndef FVP_GLOBAL_H
 #define FVP_GLOBAL_H
 
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 #include"video_windows.h"
 #include"audio_output_device.h"
 #include"ad_codec.h"
 
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 VideoWindows *fvp_default_hd_windows(void);
 VideoWindows *fvp_default_ad_windows(void);

@@ -71,7 +71,6 @@ ADCodec *fvp_default_ad_codec(void)
 }
 
 
-#if 1
 void fvp_set_hd_windows(VideoWindows *hd_windows)
 {
     g_globals.hd_windows = hd_windows;
@@ -92,7 +91,7 @@ void fvp_set_sd_windows(VideoWindows *sd_windows)
 
     return;
 }
-#endif 
+
 void fvp_set_audio_output_device(AudioOutputDevice *audio_output_device)
 {
     g_globals.audio_output_device = audio_output_device;
