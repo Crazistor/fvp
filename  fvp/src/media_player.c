@@ -59,7 +59,7 @@ struct _MediaPlayer
 
 static int calc_play_rate(int base_rate, PlaySpeed speed, bool is_fast_play)
 {	
-	return_val_if_failed(base_rate > 0 , -1);
+	return_val_if_fail(base_rate > 0 , -1);
 
 	int rate = 0;
 	int n = 0;
@@ -96,7 +96,7 @@ static int calc_play_rate(int base_rate, PlaySpeed speed, bool is_fast_play)
 
 static int media_player_internal_control(MediaPlayer *thiz, int query, va_list args)
 {
-	return_val_if_failed(thiz != NULL && query < QUERY_INVALID, -1);
+	return_val_if_fail(thiz != NULL && query < QUERY_INVALID, -1);
 
     double *postion;
     
@@ -204,10 +204,10 @@ MediaPlayer *media_player_create(int vdec_chn,
 
 	thiz->access = accesser_factory_create_a_accesser(access_path);
 	
-	return_val_if_failed(thiz->access != NULL, NULL);
+	return_val_if_fail(thiz->access != NULL, NULL);
 	
 	thiz->video_decoder = video_decoder_create(vdec_chn, out_rect.u32Width, out_rect.u32Height);
-	return_val_if_failed(thiz->video_decoder != NULL, NULL);
+	return_val_if_fail(thiz->video_decoder != NULL, NULL);
 	thiz->windows = windows;
 	if(thiz->windows != NULL)
 	{
@@ -267,7 +267,7 @@ void media_player_destroy(MediaPlayer *thiz)
 
 int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(thiz->is_voice_enable == is_voice_enable)
 	{
@@ -298,7 +298,7 @@ int media_player_is_voice_enable(MediaPlayer *thiz, bool is_voice_enable)
 
 int media_player_set_volume(MediaPlayer *thiz, unsigned int volume)
 {
-	return_val_if_failed(thiz != NULL && volume <= 100, -1);
+	return_val_if_fail(thiz != NULL && volume <= 100, -1);
 
 	msg_dbg("Fun[%s]\n", __func__);
 
@@ -308,7 +308,7 @@ int media_player_set_volume(MediaPlayer *thiz, unsigned int volume)
 
 int media_player_play(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	fvp_mutex_lock(&thiz->lock);
 	
@@ -340,7 +340,7 @@ int media_player_play(MediaPlayer *thiz)
 
 int media_player_pause(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
 	fvp_mutex_lock(&thiz->lock);
 
@@ -359,7 +359,7 @@ int media_player_pause(MediaPlayer *thiz)
 
 int media_player_stop(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	media_player_event_manager_send_event(thiz->event_manager, MEDIA_PLAYER_STOPED);
 
@@ -371,7 +371,7 @@ int media_player_stop(MediaPlayer *thiz)
 
 int media_player_frame_play(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	fvp_mutex_lock(&thiz->lock);
 
@@ -389,7 +389,7 @@ int media_player_frame_play(MediaPlayer *thiz)
 
 int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	msg_dbg("Fun[%s]\n", __func__);
 
@@ -415,7 +415,7 @@ int media_player_fast_play(MediaPlayer *thiz, PlaySpeed speed)
 
 int media_player_slow_play(MediaPlayer *thiz, PlaySpeed speed)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
 	if(thiz->state == MEDIA_NOT_START)
 	{
@@ -435,7 +435,7 @@ int media_player_slow_play(MediaPlayer *thiz, PlaySpeed speed)
 
 int media_player_get_file_size(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
 	if(thiz->access && thiz->state != MEDIA_NOT_START)
 	{
@@ -447,7 +447,7 @@ int media_player_get_file_size(MediaPlayer *thiz)
 
 int media_player_get_position(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(thiz->access && thiz->state != MEDIA_NOT_START)
 	{
@@ -459,7 +459,7 @@ int media_player_get_position(MediaPlayer *thiz)
 
 int media_player_set_position(MediaPlayer *thiz, int position)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	msg_dbg("Fun(%s) handle \n", __func__);
 	
@@ -468,7 +468,7 @@ int media_player_set_position(MediaPlayer *thiz, int position)
 
 int media_player_get_total_time(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(thiz->access && thiz->state != MEDIA_NOT_START)
 	{
@@ -480,7 +480,7 @@ int media_player_get_total_time(MediaPlayer *thiz)
 
 int media_player_get_cur_time(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(thiz->access && thiz->state != MEDIA_NOT_START)
 	{
@@ -492,7 +492,7 @@ int media_player_get_cur_time(MediaPlayer *thiz)
 
 int media_player_seek_time(MediaPlayer *thiz, int time)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	msg_dbg("Fun(%s) handle \n", __func__);
 
@@ -502,7 +502,7 @@ int media_player_seek_time(MediaPlayer *thiz, int time)
 
 bool media_player_is_playing(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, false);
+	return_val_if_fail(thiz != NULL, false);
 
 	if(thiz->state != MEDIA_PAUSED && thiz->state != MEDIA_NOT_START && thiz->state != MEDIA_STOPPED)
 	{
@@ -514,7 +514,7 @@ bool media_player_is_playing(MediaPlayer *thiz)
 
 int media_player_control(MediaPlayer *thiz, int query, ...)
 {
-	return_val_if_failed(thiz != NULL && query < QUERY_INVALID, -1);
+	return_val_if_fail(thiz != NULL && query < QUERY_INVALID, -1);
 	
     va_list args;
     int     res;
@@ -528,14 +528,14 @@ int media_player_control(MediaPlayer *thiz, int query, ...)
 
 MediaPlayerEventManager *media_player_get_event_manager(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	return thiz->event_manager;
 }
 
 PAYLOAD_TYPE_E media_player_get_audio_playload_type(MediaPlayer *thiz)
 {
-	return_val_if_failed(thiz != NULL && thiz->audio_decoder != NULL, -1);
+	return_val_if_fail(thiz != NULL && thiz->audio_decoder != NULL, -1);
 
 	return audio_decoder_get_playload_type(thiz->audio_decoder);
 }

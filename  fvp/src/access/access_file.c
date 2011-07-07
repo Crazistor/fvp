@@ -98,7 +98,7 @@ static Block* access_file_block(Access *thiz)
  */
 static int  access_file_read(Access *thiz, uint8_t *buffer, size_t len)
 {
-	return_val_if_failed(thiz != NULL && buffer != NULL && len >= 0, -1);
+	return_val_if_fail(thiz != NULL && buffer != NULL && len >= 0, -1);
 	
 	int ret = -1;
 	DECL_PRIV(thiz, priv);	
@@ -141,7 +141,7 @@ static int  access_file_read(Access *thiz, uint8_t *buffer, size_t len)
  */
 static void access_file_seek(Access *thiz, unsigned long pos)
 {
-	return_if_failed(thiz != NULL );
+	return_if_fail(thiz != NULL );
 
 	DECL_PRIV(thiz, priv);	
 	lseek(priv->fd, pos, SEEK_SET);
@@ -155,7 +155,7 @@ static void access_file_seek(Access *thiz, unsigned long pos)
  */
 static void access_file_control(Access *thiz, int query, va_list args)
 {	
-	return_if_failed(thiz != NULL);
+	return_if_fail(thiz != NULL);
 	
 	msg_dbg("access_file_control\n");
 	
@@ -187,7 +187,7 @@ static void access_file_destroy(Access *thiz)
 
 static int parse_access_path(char *access_path, char *file_name, size_t file_name_len)
 {
-	return_val_if_failed(access_path != NULL && file_name != NULL, -1);
+	return_val_if_fail(access_path != NULL && file_name != NULL, -1);
 
 	if(strstr(access_path, ACCESS_KEY_WORKD) == 0)
 	{
@@ -212,7 +212,7 @@ static int parse_access_path(char *access_path, char *file_name, size_t file_nam
  */
 Access *access_file_create(char *access_path)
 {
-	return_val_if_failed(access_path, NULL);
+	return_val_if_fail(access_path, NULL);
 	
 	int fd = -1;
 	char file_path[64] = {0};
@@ -225,7 +225,7 @@ Access *access_file_create(char *access_path)
 	}
 	
 	Access *thiz = (Access *)COMM_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	msg_dbg("file_path(%s)\n", file_path);
 	

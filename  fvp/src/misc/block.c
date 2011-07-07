@@ -44,7 +44,7 @@ Block *block_create(size_t size)
 	
 	/*alloc a buffer */
 	uint8_t *buf = NULL;
-	buf = COMM_ALLOC(ALIGN(size));
+	buf = FTK_ALLOC(ALIGN(size));
 	if(buf == NULL)
 	{
 		msg_dbg("error: not enough memory!\n");
@@ -65,7 +65,7 @@ Block *block_create(size_t size)
 
 Block *block_realloc(Block *thiz, int new_size)
 {
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	/*free the block p_buffer*/
 	if(thiz->p_buffer != NULL)
@@ -76,7 +76,7 @@ Block *block_realloc(Block *thiz, int new_size)
 
 	/*alloc a new buffer*/
 	uint8_t *buf = NULL;
-	buf = COMM_ALLOC(ALIGN(new_size));
+	buf = FTK_ALLOC(ALIGN(new_size));
 	if(buf == NULL)
 	{
 		msg_dbg("error: not enough memory!\n");

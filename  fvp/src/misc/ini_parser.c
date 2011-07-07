@@ -44,7 +44,7 @@ struct _IniParser
 
 static int ini_parser_handle_group(IniParser *thiz, char *group)
 {
-	return_val_if_failed(thiz && thiz->builder && group,  -1);
+	return_val_if_fail(thiz && thiz->builder && group,  -1);
 
 	ini_builder_on_group(thiz->builder, group);
 
@@ -53,7 +53,7 @@ static int ini_parser_handle_group(IniParser *thiz, char *group)
 
 static int ini_parser_handle_key_value(IniParser *thiz, char *key, char *value)
 {
-	return_val_if_failed(thiz && thiz->builder && key, -1);
+	return_val_if_fail(thiz && thiz->builder && key, -1);
 	
 	ini_builder_on_key_value(thiz->builder, key, value);
 
@@ -62,7 +62,7 @@ static int ini_parser_handle_key_value(IniParser *thiz, char *key, char *value)
 
 static int ini_parser_handle_comment(IniParser *thiz, char *comment)
 {
-	return_val_if_failed(thiz && thiz->builder && comment, -1);
+	return_val_if_fail(thiz && thiz->builder && comment, -1);
 
 	ini_builder_on_comment(thiz->builder, comment);
 
@@ -80,7 +80,7 @@ IniParser *ini_parser_create()
 
 void ini_parser_set_builder(IniParser *thiz, IniBuilder *builder)
 {	
-	return_if_failed(thiz != NULL );
+	return_if_fail(thiz != NULL );
 
 	thiz->builder = builder;
     builder->ref_count++;
@@ -92,7 +92,7 @@ void ini_parser_set_builder(IniParser *thiz, IniBuilder *builder)
 
 void ini_parser_parse(IniParser *thiz, char *ini, char *comment_char)
 {
-	return_if_failed(thiz != NULL && ini != NULL );
+	return_if_fail(thiz != NULL && ini != NULL );
 
 	char *group_start = NULL;
 	char *comment_start = NULL;

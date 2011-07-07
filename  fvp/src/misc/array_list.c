@@ -48,7 +48,7 @@ struct _ArrayList
 
 static List *list_node_create(void *data)
 {
-	return_val_if_failed(data, NULL);
+	return_val_if_fail(data, NULL);
 	
 	List *list = (List *)COMM_ZALLOC(sizeof(List));
 	
@@ -72,7 +72,7 @@ ArrayList *array_list_create()
 
 int array_list_add(ArrayList *thiz, void *data)
 {
-	return_val_if_failed(thiz && data, -1);
+	return_val_if_fail(thiz && data, -1);
 
 	List *p = NULL;	
 	List *current = NULL;	
@@ -100,7 +100,7 @@ int array_list_add(ArrayList *thiz, void *data)
 
 int array_list_remove(ArrayList *thiz, void *data, int data_size)
 {
-	return_val_if_failed(thiz && data && data_size > 0, -1);
+	return_val_if_fail(thiz && data && data_size > 0, -1);
 
 	List *p = thiz->header;
 
@@ -129,7 +129,7 @@ int array_list_remove(ArrayList *thiz, void *data, int data_size)
 
 int array_list_get_id_by_data(ArrayList *thiz, void *data, int data_size)
 {		
-	return_val_if_failed(thiz && data && data_size>0, -1);		
+	return_val_if_fail(thiz && data && data_size>0, -1);		
 	
 	if(thiz->array_list_number == 0)
 	{
@@ -155,7 +155,7 @@ int array_list_get_id_by_data(ArrayList *thiz, void *data, int data_size)
 
 void *array_list_get_data_by_id(ArrayList *thiz, int id)
 {
-	return_val_if_failed(thiz&&(id>=0), NULL);
+	return_val_if_fail(thiz&&(id>=0), NULL);
 	
 	int i = 0;	
 	List *p = NULL;
@@ -175,14 +175,14 @@ void *array_list_get_data_by_id(ArrayList *thiz, int id)
 
 int array_list_get_size(ArrayList *thiz)
 {
-	return_val_if_failed(thiz, -1);
+	return_val_if_fail(thiz, -1);
 
 	return thiz->array_list_number;
 }
 
 void array_list_destroy(ArrayList *thiz)
 {
-	return_if_failed(thiz);	
+	return_if_fail(thiz);	
 	
 	List *p = NULL;
 	List *prev = NULL;	

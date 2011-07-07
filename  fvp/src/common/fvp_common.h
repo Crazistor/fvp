@@ -86,12 +86,12 @@ static size_t profile_begin;
 #endif
 
 
-#define return_val_if_failed(p, val) if(!(p))\
+#define return_val_if_fail(p, val) if(!(p))\
 	{printf("%s:%d Warning: "#p" failed.\n",\
 	__func__, __LINE__); return (val);}
 
 
-#define return_if_failed(p) if(!(p))\
+#define return_if_fail(p) if(!(p))\
 	{printf("%s:%d Warning: "#p" failed.\n", \
 		__func__, __LINE__); return;}
 
@@ -120,20 +120,20 @@ static size_t profile_begin;
 
 
 
-#define COMM_ALLOC(s)       malloc(s)
-#define COMM_REALLOC(p, s)  realloc(p, s)
-#define COMM_ZALLOC(s)      calloc(1, s)
-#define COMM_FREE(p)        if(p) {free(p); p = NULL;}
-#define COMM_ZFREE(p, size) if(p) {memset((p), 0x00, (size)); free(p); p = NULL;}
-#define COMM_STRDUP(s)		comm_strdup(s)
+#define FTK_ALLOC(s)       malloc(s)
+#define FTK_REALLOC(p, s)  realloc(p, s)
+#define FTK_ZALLOC(s)      calloc(1, s)
+#define FTK_FREE(p)        if(p) {free(p); p = NULL;}
+#define FTK_ZFREE(p, size) if(p) {memset((p), 0x00, (size)); free(p); p = NULL;}
+#define FTK_STRDUP(s)		ftk_strdup(s)
 
-static inline char *comm_strdup(char *s)
+static inline char *ftk_strdup(char *s)
 {
 	char *buf = NULL;
 	if(s)
 	{
 		int length = strlen(s) + 1;
-		buf = (char *)COMM_ALLOC(length);
+		buf = (char *)FTK_ALLOC(length);
 		memcpy(buf, s, length);
 	}
 	return buf;

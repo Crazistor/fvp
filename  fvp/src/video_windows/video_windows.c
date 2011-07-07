@@ -70,7 +70,7 @@ struct _VideoWindows
 
 static int video_windows_check_vo_decode_channel(VideoWindows *thiz, int vo_channel)
 {
-	return_val_if_failed(thiz != NULL && vo_channel >= 0, -1);
+	return_val_if_fail(thiz != NULL && vo_channel >= 0, -1);
 	
 	if(vo_channel > thiz->cur_pic_numbers)
 	{
@@ -131,7 +131,7 @@ static void video_windows_destroy(VideoWindows *thiz)
 
 static int get_width_height_by_resolution(VO_INTF_SYNC_E vo_system_sync, int *width, int *height,int *rate)
 {
-	return_val_if_failed(vo_system_sync < VO_OUTPUT_BUTT, -1);
+	return_val_if_fail(vo_system_sync < VO_OUTPUT_BUTT, -1);
 
 	switch(vo_system_sync)
 	{	
@@ -214,7 +214,7 @@ static int get_width_height_by_resolution(VO_INTF_SYNC_E vo_system_sync, int *wi
 
 static int get_display_rate(VO_DEV vo_dev, VO_INTF_SYNC_E vo_system_sync)
 {
-	return_val_if_failed(vo_dev <VO_DEV_BUTT && vo_system_sync < VO_OUTPUT_BUTT, -1);
+	return_val_if_fail(vo_dev <VO_DEV_BUTT && vo_system_sync < VO_OUTPUT_BUTT, -1);
 
 	int display_rate = -1;
 
@@ -284,7 +284,7 @@ static void get_video_output_layer_attr(VO_VIDEO_LAYER_ATTR_S *VideoLayerAttr, i
 
 static int init_video_output_videolayer(VideoWindows *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
     HI_S32 ret;
 	VO_VIDEO_LAYER_ATTR_S videolayer_attr;
@@ -320,7 +320,7 @@ static int init_video_output_videolayer(VideoWindows *thiz)
 
 static int init_video_output_device(VideoWindows *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
     HI_S32 ret;
     VO_PUB_ATTR_S stVoDevAttr;
@@ -465,7 +465,7 @@ VideoWindows *video_windows_create(VO_DEV_E video_dev, VO_INTF_SYNC_E vo_system_
 
 int video_windows_set_display_mode(VideoWindows *thiz, VideoPictureMode picture_mode)
 {
-	return_val_if_failed(thiz != NULL , -1);
+	return_val_if_fail(thiz != NULL , -1);
 	
 
 	return 0;
@@ -474,7 +474,7 @@ int video_windows_set_display_mode(VideoWindows *thiz, VideoPictureMode picture_
 
 int video_windows_picture_bind_decode_chn(VideoWindows *thiz, int vo_picture_id, int decode_chn_id)
 {
-	return_val_if_failed(thiz != NULL && vo_picture_id < VO_MAX_CHN_NUM, -1);
+	return_val_if_fail(thiz != NULL && vo_picture_id < VO_MAX_CHN_NUM, -1);
 
 	if(vo_picture_id > thiz->cur_pic_numbers)
 	{
@@ -500,7 +500,7 @@ int video_windows_picture_bind_decode_chn(VideoWindows *thiz, int vo_picture_id,
 int video_windows_picture_bind_video_input_chn(VideoWindows *thiz)
 {
 
-	return_val_if_failed(thiz != NULL , -1);
+	return_val_if_fail(thiz != NULL , -1);
 
 	msg_dbg("fun[%s]\n", __func__);
 
@@ -510,7 +510,7 @@ int video_windows_picture_bind_video_input_chn(VideoWindows *thiz)
 
 int video_windows_pause_vo_channel(VideoWindows *thiz, int vo_channel)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(video_windows_check_vo_decode_channel(thiz, vo_channel) != 0)
 	{
@@ -526,7 +526,7 @@ int video_windows_pause_vo_channel(VideoWindows *thiz, int vo_channel)
 
 int video_windows_resume_vo_channel(VideoWindows *thiz, int vo_channel)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(video_windows_check_vo_decode_channel(thiz, vo_channel) != 0)
 	{
@@ -542,7 +542,7 @@ int video_windows_resume_vo_channel(VideoWindows *thiz, int vo_channel)
 
 int video_windows_step_vo_channel(VideoWindows *thiz, int vo_channel)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	if(video_windows_check_vo_decode_channel(thiz, vo_channel) != 0)
 	{
@@ -591,7 +591,7 @@ void video_windows_unref(VideoWindows *thiz)
 
 int video_windows_get_display_rate(VideoWindows *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	return thiz->display_rate;
 }
@@ -599,7 +599,7 @@ int video_windows_get_display_rate(VideoWindows *thiz)
 
 int video_windows_set_display_rate(VideoWindows *thiz, int vo_chn, int display_rate)
 {
-	return_val_if_failed(thiz != NULL && display_rate > 0, -1);
+	return_val_if_fail(thiz != NULL && display_rate > 0, -1);
 	
     HI_S32 s32Ret = HI_SUCCESS;
 	s32Ret = HI_MPI_VO_SetChnFrameRate(thiz->vo_dev, vo_chn,display_rate);

@@ -89,7 +89,7 @@ static inline int access_read(Access *thiz, uint8_t *buffer, size_t len)
  */
 static inline void access_seek(Access *thiz, unsigned long pos)
 {
-	return_if_failed(thiz != NULL);
+	return_if_fail(thiz != NULL);
 	
     return thiz->seek(thiz,  pos);
 }
@@ -99,7 +99,7 @@ static inline void access_seek(Access *thiz, unsigned long pos)
  */
 static inline void access_control(Access *thiz, int query, va_list args)
 {	
-	return_if_failed(thiz != NULL);
+	return_if_fail(thiz != NULL);
 
     return thiz->control(thiz, query, args);
 }
@@ -109,7 +109,7 @@ static inline void access_control(Access *thiz, int query, va_list args)
  */
 static inline Block *access_block(Access *thiz)
 {	
-    return_val_if_failed(thiz != NULL && thiz->block != NULL, NULL);
+    return_val_if_fail(thiz != NULL && thiz->block != NULL, NULL);
 
     return thiz->block(thiz);
 }

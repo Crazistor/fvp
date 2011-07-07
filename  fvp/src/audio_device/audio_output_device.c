@@ -36,8 +36,6 @@ struct _AudioOutputDevice
 {	
     AUDIO_DEV ao_dev_id;
     int ao_channel;
-
-    int is_init;    /*0 -- not inited  1 -- inited*/
     
     PAYLOAD_TYPE_E playload_type;
 
@@ -49,7 +47,7 @@ struct _AudioOutputDevice
 
 static int get_ao_dev_attr(PAYLOAD_TYPE_E playload_type, AIO_ATTR_S *aio_aattr)
 {
-	return_val_if_failed(aio_aattr != NULL, -1);
+	return_val_if_fail(aio_aattr != NULL, -1);
 
     aio_aattr->enWorkmode = AIO_MODE_I2S_SLAVE;
     aio_aattr->u32ChnCnt = 2;
@@ -98,7 +96,7 @@ AudioOutputDevice *audio_output_device_create(AUDIO_DEV ao_dev_id, int ao_channe
 
 int  audio_output_device_init(AudioOutputDevice*thiz,  PAYLOAD_TYPE_E playload_type)
 {
-    return_val_if_failed(thiz != NULL,  -1);
+    return_val_if_fail(thiz != NULL,  -1);
 
     AIO_ATTR_S aio_aattr;
     HI_S32 s32ret;
@@ -130,7 +128,7 @@ int  audio_output_device_init(AudioOutputDevice*thiz,  PAYLOAD_TYPE_E playload_t
 
 int audio_output_device_bind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn)
 {
-    return_val_if_failed(thiz != NULL, -1);
+    return_val_if_fail(thiz != NULL, -1);
 
     HI_S32 s32ret;
 
@@ -168,7 +166,7 @@ int audio_output_device_bind_decode_chn(AudioOutputDevice *thiz,  int audio_deco
 
 int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, AUDIO_DEV ai_dev_id,  int audio_input_chn)
 {
-    return_val_if_failed(thiz != NULL, -1);
+    return_val_if_fail(thiz != NULL, -1);
     HI_S32 s32ret;
 
     if(thiz->bind_type == BIND_AUDIO_DECODE)
@@ -207,7 +205,7 @@ int audio_output_device_bind_input_chn(AudioOutputDevice *thiz, AUDIO_DEV ai_dev
 
 int audio_output_device_unbind_decode_chn(AudioOutputDevice *thiz,  int audio_decode_chn)
 {
-    return_val_if_failed(thiz != NULL, -1);
+    return_val_if_fail(thiz != NULL, -1);
 
 	if(thiz->bind_type != BIND_AUDIO_DECODE || thiz->bind_audio_dec_chn != audio_decode_chn)
 	{
