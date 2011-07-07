@@ -32,25 +32,26 @@
 #ifndef FVP_LOG_H
 #define FVP_LOG_H
 
+#include"fvp_common.h"
+
 
 #ifdef __cplusplus
 extern "C"{
 #endif 
 
-typedef enum  _LogLevel
+typedef enum  _FvpLogLevel
 {
-    LOG_D,
-    LOG_I,
-    LOG_W,
-    LOG_E,
-}LogLevel;
+    FvpLOG_D,
+    FvpLOG_I,
+    FvpLOG_W,
+    FvpLOG_E,
+}FvpLogLevel;
 
-
-typedef enum _LogSaveMode
+typedef enum _FvpLogSaveMode
 {
-    LOG_PRINT_MODE,
-    LOG_FILE_MODE,
-}LogSaveMode;
+    FVP_LOG_PRINT_MODE,
+    FVP_LOG_FILE_MODE,
+}FvpLogSaveMode;
 
 /*Init the log module
  @log_level set the log level  LOG_D --handle the debug log 
@@ -58,19 +59,19 @@ typedef enum _LogSaveMode
  @filename if mode == LOG_FILE_MODE then the log save to filename file
  @return 0 -- success,  -1 --failed 
 */
-int log_init(LogLevel log_level, LogSaveMode mode, char *filename);
+int fvp_log_init(FvpLogLevel log_level, FvpLogSaveMode mode, char *filename);
 
 /*debug log*/
-void log_d(char *format, ...);
+void fvp_log_d(char *format, ...);
 
 /*infomation log*/
-void log_i(char *format, ...);
+void fvp_log_i(char *format, ...);
 
 /*warn log*/
-void log_w(char *format, ...);
+void fvp_log_w(char *format, ...);
 
 /*error log*/
-void log_e(char *format, ...);
+void fvp_log_e(char *format, ...);
 
 
 #ifdef __cplusplus
