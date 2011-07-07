@@ -41,7 +41,7 @@ struct _FvpScreen
 
 static int fvp_screen_calc_width_height(FvpScreen *fvp_screen, VideoResolution resolution)
 {
-	return_val_if_failed(fvp_screen != NULL && resolution < VR_BUTT, RET_INVALID_PARAMETER);
+	return_val_if_fail(fvp_screen != NULL && resolution < VR_BUTT, RET_INVALID_PARAMETER);
 
 	switch(resolution)
 	{	
@@ -90,7 +90,7 @@ static int fvp_screen_calc_width_height(FvpScreen *fvp_screen, VideoResolution r
 
 FvpScreen *fvp_screen_create(VideoResolution resolution)
 {
-	return_val_if_failed(resolution < VR_BUTT, NULL);
+	return_val_if_fail(resolution < VR_BUTT, NULL);
 	
 	FvpScreen *thiz = NULL;	
 	thiz  = (FvpScreen *)COMM_ZALLOC(sizeof(FvpScreen));
@@ -107,7 +107,7 @@ int fvp_screen_chanege_resolution(FvpScreen *thiz, VideoResolution resolution)
 
 int fvp_screen_get_width(FvpScreen *thiz)
 {
-	return_val_if_failed(thiz != NULL, RET_INVALID_PARAMETER);
+	return_val_if_fail(thiz != NULL, RET_INVALID_PARAMETER);
 
 	return thiz->screen_width;
 }
@@ -115,7 +115,7 @@ int fvp_screen_get_width(FvpScreen *thiz)
 
 int fvp_screen_get_height(FvpScreen *thiz)
 {
-	return_val_if_failed(thiz != NULL, RET_INVALID_PARAMETER);
+	return_val_if_fail(thiz != NULL, RET_INVALID_PARAMETER);
 
 	return thiz->screen_height;
 }

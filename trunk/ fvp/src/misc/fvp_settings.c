@@ -81,7 +81,7 @@ struct _GroupNode
 
 static int  parse_group_and_key(char *group_and_key, char *group, char *key, int max_length)
 {	
-	return_val_if_failed(group_and_key && group && key && max_length >0, -1);
+	return_val_if_fail(group_and_key && group && key && max_length >0, -1);
 
 	char *p = NULL;
 	p = strstr(group_and_key, "/");
@@ -110,7 +110,7 @@ static int  parse_group_and_key(char *group_and_key, char *group, char *key, int
 
 static struct _KeyNode *key_node_create(FvpSettings *settings, char *key, char *value)
 {
-	return_val_if_failed(settings && key , NULL);
+	return_val_if_fail(settings && key , NULL);
 	
 	struct _KeyNode *key_node = (struct _KeyNode *)COMM_ZALLOC(sizeof(*key_node));
 
@@ -129,8 +129,8 @@ static struct _KeyNode *key_node_create(FvpSettings *settings, char *key, char *
 
 static int groupNode_add_keyNode(struct _GroupNode *group_node, struct _KeyNode *key_node)
 {
-	return_val_if_failed(group_node, -1);
-	return_val_if_failed(key_node, -1);
+	return_val_if_fail(group_node, -1);
+	return_val_if_fail(key_node, -1);
 	if(group_node && key_node)
 	{	
 	
@@ -153,13 +153,13 @@ static int groupNode_add_keyNode(struct _GroupNode *group_node, struct _KeyNode 
 
 static int fvp_settings_add_key_value(FvpSettings *settings, char *key, char *value)
 {
-	return_val_if_failed(settings != NULL && key != NULL, -1);
+	return_val_if_fail(settings != NULL && key != NULL, -1);
 
 	if(settings->group_node != NULL)
 	{	
 		/*create a key node*/
 		struct _KeyNode *key_node = key_node_create(settings, key, value);	
-		return_val_if_failed(key_node != NULL, -1);
+		return_val_if_fail(key_node != NULL, -1);
 		
 		/*add the key node to the last group */
 		struct _GroupNode *current_group = settings->current_group;
@@ -175,7 +175,7 @@ static int fvp_settings_add_key_value(FvpSettings *settings, char *key, char *va
 
 static int fvp_settings_add_group(FvpSettings *settings, char *group)
 {
-	return_val_if_failed(settings != NULL && group != NULL, -1);
+	return_val_if_fail(settings != NULL && group != NULL, -1);
 
 	/*create a group node*/
 	struct _GroupNode *group_node  = (struct _GroupNode*)COMM_ZALLOC(sizeof(*group_node));
@@ -205,7 +205,7 @@ static int fvp_settings_add_group(FvpSettings *settings, char *group)
 
 static int fvp_settings_store_comment(FvpSettings *settings, char *comment)
 {
-	return_val_if_failed(settings && comment, -1);
+	return_val_if_fail(settings && comment, -1);
 
 	
 	settings->have_comment_flag = 1;
@@ -216,7 +216,7 @@ static int fvp_settings_store_comment(FvpSettings *settings, char *comment)
 }
 static void  fvp_settings_builder_on_group(IniBuilder *thiz, char *group)
 {
-	return_if_failed(thiz != NULL && group != NULL);
+	return_if_fail(thiz != NULL && group != NULL);
 	
 	DECL_PRIV(thiz, priv);
 	
@@ -226,7 +226,7 @@ static void  fvp_settings_builder_on_group(IniBuilder *thiz, char *group)
 
 static void fvp_settings_builder_on_key_value(IniBuilder *thiz, char *key, char *value)
 {
-	return_if_failed(thiz != NULL && key != NULL);
+	return_if_fail(thiz != NULL && key != NULL);
 	
 	DECL_PRIV(thiz, priv);
 	
@@ -236,7 +236,7 @@ static void fvp_settings_builder_on_key_value(IniBuilder *thiz, char *key, char 
 
 static void fvp_settings_builder_on_comment(IniBuilder *thiz, char *comment)
 {
-	return_if_failed(thiz != NULL && comment != NULL);
+	return_if_fail(thiz != NULL && comment != NULL);
 
 	DECL_PRIV(thiz, priv);
 	
@@ -275,7 +275,7 @@ static IniBuilder *fvp_settings_builder_create(void)
 
 static  int fvp_settings_parser_file(FvpSettings *thiz)
 {
-	return_val_if_failed(thiz != NULL && thiz->settings_file_name != NULL, -1);
+	return_val_if_fail(thiz != NULL && thiz->settings_file_name != NULL, -1);
 	
 	IniParser *parser = NULL;
 	IniBuilder *builder = NULL;
@@ -315,12 +315,12 @@ static  int fvp_settings_parser_file(FvpSettings *thiz)
 
 FvpSettings *fvp_settings_create(char *settings_file)
 {	
-	return_val_if_failed(settings_file != NULL, NULL);
+	return_val_if_fail(settings_file != NULL, NULL);
 	
 	FvpSettings *thiz = NULL;
 
 	thiz = (FvpSettings *)COMM_ZALLOC(sizeof(FvpSettings));
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 	fvp_mutex_init(&thiz->settings_lock);
 	thiz->settings_file_name = COMM_STRDUP(settings_file);
 	
@@ -340,7 +340,7 @@ FvpSettings *fvp_settings_create(char *settings_file)
  */
 char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *default_value)
 {
-	return_val_if_failed(thiz && group_and_key, NULL);
+	return_val_if_fail(thiz && group_and_key, NULL);
 
 	char group_buf[128] = {0};
 	char key_buf[128]= {0};
@@ -396,7 +396,7 @@ char *fvp_settings_get_value(FvpSettings *thiz, char *group_and_key, char *defau
 
 static int write_group_to_file(struct _GroupNode *group_node,  int fd)
 {
-	return_val_if_failed(group_node && fd >= 0,  -1);
+	return_val_if_fail(group_node && fd >= 0,  -1);
 
 	char  buf[512] = {0};
 	
@@ -419,7 +419,7 @@ static int write_group_to_file(struct _GroupNode *group_node,  int fd)
 
 static write_key_node_to_file(struct _KeyNode *key_node, int fd)
 {
-	return_val_if_failed(key_node != NULL && fd >= 0, -1);
+	return_val_if_fail(key_node != NULL && fd >= 0, -1);
 	
 	char  buf[512] = {0};
 	/*if have comment write the comment to settings file*/
@@ -443,7 +443,7 @@ static write_key_node_to_file(struct _KeyNode *key_node, int fd)
 */
 int fvp_settings_sync(FvpSettings *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	fvp_mutex_lock(&thiz->settings_lock);
 
 	int fd = -1;

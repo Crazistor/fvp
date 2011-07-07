@@ -15,7 +15,7 @@ struct _FvpMmap
 int fvp_mmap_exist(const char* filename)
 {
 	struct stat st;
-	return_val_if_failed(filename != NULL, 0);
+	return_val_if_fail(filename != NULL, 0);
 
 	return stat(filename, &st) == 0;
 }
@@ -26,20 +26,20 @@ FvpMmap* fvp_mmap_create(const char* filename, size_t offset, size_t size)
 	
 	
 	struct stat st;
-	return_val_if_failed(filename != NULL, NULL);
+	return_val_if_fail(filename != NULL, NULL);
 
 	if(stat(filename, &st) != 0)
 	{
 		return NULL;
 	}
-	return_val_if_failed(offset < st.st_size, NULL);
+	return_val_if_fail(offset < st.st_size, NULL);
 
 
 	size = (offset + size) <= st.st_size ? size : st.st_size - offset;
 
 
 	thiz = COMM_ZALLOC(sizeof(FvpMmap));
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	thiz->fd = open(filename, O_RDONLY);
 	if(thiz->fd > 0)
@@ -58,14 +58,14 @@ FvpMmap* fvp_mmap_create(const char* filename, size_t offset, size_t size)
 
 void* fvp_mmap_data(FvpMmap* thiz)
 {
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	return thiz->data;
 }
 
 size_t fvp_mmap_length(FvpMmap* thiz)
 {
-	return_val_if_failed(thiz != NULL, 0);
+	return_val_if_fail(thiz != NULL, 0);
 
 	return thiz->length;
 }

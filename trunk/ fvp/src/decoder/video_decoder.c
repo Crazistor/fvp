@@ -43,7 +43,7 @@ struct _VideoDecoder
 
 static int create_vdec_chn(VideoDecoder *thiz, PAYLOAD_TYPE_E enType)
 {	
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
 	VDEC_CHN_ATTR_S 	stAttr;
 	HI_S32 s32ret;
@@ -98,7 +98,7 @@ static int create_vdec_chn(VideoDecoder *thiz, PAYLOAD_TYPE_E enType)
 
 static int vdec_chn_bind_output_chn(VideoDecoder *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	return 0;
 }
@@ -169,7 +169,7 @@ bool video_decoder_able_to_decode_next_data(VideoDecoder *thiz)
 
 int video_decoder_control(VideoDecoder *thiz, int i_query, va_list args)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 	
 	msg_dbg("fun[%s]\n", __func__);
 

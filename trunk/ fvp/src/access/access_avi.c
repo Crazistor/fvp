@@ -48,7 +48,7 @@ typedef struct _PrivInfo
 
 static int avi_parse_path(char *access_path, char *file_name, size_t file_name_len)
 {
-	 return_val_if_failed(access_path != NULL && file_name != NULL, -1);
+	 return_val_if_fail(access_path != NULL && file_name != NULL, -1);
 
 	 if(strstr(access_path, ACCESS_KEY_WORKD) == 0)
 	 {
@@ -70,7 +70,7 @@ static int avi_parse_path(char *access_path, char *file_name, size_t file_name_l
 
 static Block *access_avi_block(Access *thiz)
 {
-	return_val_if_failed(thiz != NULL, NULL);
+	return_val_if_fail(thiz != NULL, NULL);
 
 	DECL_PRIV(thiz, priv);
 	
@@ -114,10 +114,10 @@ static void access_avi_destroy(Access *thiz)
 		DECL_PRIV(thiz, priv);
 		
 		block_destroy(priv->block);
-		COMM_FREE(priv->file_path);
+		FTK_FREE(priv->file_path);
 		av_close_input_file(priv->format_ctx);
 		
-		COMM_ZFREE(thiz, sizeof(*thiz) + sizeof(PrivInfo));
+		FTK_ZFREE(thiz, sizeof(*thiz) + sizeof(PrivInfo));
 	}
 	return;
 }
@@ -191,7 +191,7 @@ static int access_init_ffmpeg(Access *thiz, char *file_path)
 
 Access *access_avi_create(char *access_path)
 {
-	return_val_if_failed(access_path, NULL);
+	return_val_if_fail(access_path, NULL);
 		
 	int fd = -1;
 	char file_path[64] = {0};
@@ -202,8 +202,8 @@ Access *access_avi_create(char *access_path)
 		return NULL;
 	}
 
-	Access *thiz = (Access *)COMM_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
-	return_val_if_failed(thiz != NULL, NULL);
+	Access *thiz = (Access *)FTK_ZALLOC(sizeof(Access) + sizeof(PrivInfo));
+	return_val_if_fail(thiz != NULL, NULL);
 
 	/*open the file */
 	fd = open(file_path, O_RDONLY);
@@ -221,7 +221,7 @@ Access *access_avi_create(char *access_path)
 
 	DECL_PRIV(thiz, priv);
 
-	priv->file_path = COMM_STRDUP(file_path);
+	priv->file_path = FTK_STRDUP(file_path);
 	priv->block = block_create(MAX_H264_PACKET_LEN);
 	
 	access_init_ffmpeg(thiz, file_path);

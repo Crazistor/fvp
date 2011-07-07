@@ -38,7 +38,7 @@
 
 static int monitor_handle(FvpMonitor *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	printf("fun(%s) handle!\n", __func__);
 	printf("if the monitor is block, that will cause the watch dog to reboot the system!\n");
@@ -51,9 +51,9 @@ static int monitor_handle(FvpMonitor *thiz)
 
 static void monitor_destroy(FvpMonitor *thiz)
 {
-	return_if_failed(thiz != NULL);
+	return_if_fail(thiz != NULL);
 
-	COMM_FREE(thiz);		
+	FTK_FREE(thiz);		
 	
 	return;
 }
@@ -62,7 +62,7 @@ static FvpMonitor *monitor_create(void)
 {
 	FvpMonitor *monitor = NULL;
 
-	monitor = (FvpMonitor *)COMM_ALLOC(sizeof(FvpMonitor));
+	monitor = (FvpMonitor *)FTK_ALLOC(sizeof(FvpMonitor));
 
 	monitor->handle = monitor_handle;
 	monitor->destroy = monitor_destroy;

@@ -132,14 +132,14 @@ AudioDecoder *audio_decoder_create(int audio_dec_channel, PAYLOAD_TYPE_E payload
 
 int audio_decoder_get_audio_decode_chn(AudioDecoder *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 		
 	return thiz->audio_decode_channel;
 }
 
 int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	AUDIO_STREAM_S stAudioStream;    
 	HI_S32 s32ret;
@@ -160,7 +160,7 @@ int audio_decoder_decode_data(AudioDecoder *thiz, Block *block)
 
 int audio_decoder_get_playload_type(AudioDecoder *thiz)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	return thiz->decode_payload_type;
 }

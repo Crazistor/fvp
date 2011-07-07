@@ -68,7 +68,7 @@ int media_player_event_manager_register_listener(MediaPlayerEventManager *thiz,
 															void *user_data,
 															int remove_enable)
 {
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	MediaPlayerEventListener *listener = (MediaPlayerEventListener *)COMM_ZALLOC(sizeof(MediaPlayerEventListener));
 
@@ -87,7 +87,7 @@ int media_player_event_manager_register_listener(MediaPlayerEventManager *thiz,
 int media_player_event_manager_send_event(MediaPlayerEventManager *thiz, MediaPlayerEventType event_type)
 {
 //	msg_dbg("media_player_event_manager_send_event\n");
-	return_val_if_failed(thiz != NULL, -1);
+	return_val_if_fail(thiz != NULL, -1);
 
 	int i = 0;
 	MediaPlayerEventListener *listener = NULL;
