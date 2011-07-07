@@ -35,8 +35,7 @@
 #include<sys/types.h>
 #include<sys/stat.h>
 #include<fcntl.h>
-#include"fvp_msg.h"
-#include"fvp_common.h"
+#include"fvp_log.h"
 
 
 static LogLevel fvp_log_level = LOG_DEBUG;
@@ -69,7 +68,7 @@ static int log_handle(const char* format, va_list ap)
     return 0;
 }
 
-int log_init(LogLevel log_level, LogSaveMode mode, char *filename)	
+int fvp_log_init(FvpLogLevel log_level, FvpLogSaveMode mode, char *filename)	
 {
 	static int log_inited = 0;
 
@@ -85,11 +84,11 @@ int log_init(LogLevel log_level, LogSaveMode mode, char *filename)
 	{	
 	    if(filename != NULL)
         {
-            log_file = COMM_STRDUP(filename);
+            log_file = FTK_STRDUP(filename);
         }   
         else
         {
-            log_file = COMM_STRDUP("./log.dat");
+            log_file = FTK_STRDUP("./log.dat");
         }
        
 	}
@@ -101,7 +100,7 @@ int log_init(LogLevel log_level, LogSaveMode mode, char *filename)
 
 
 /*debug log*/
-void log_d(char *format, ...)
+void fvp_log_d(char *format, ...)
 {
     if(fvp_log_level > LOG_D)
     {
@@ -119,7 +118,7 @@ void log_d(char *format, ...)
 }
 
 /*infomation log*/
-void log_i(char *format, ...)
+void fvp_log_i(char *format, ...)
 {
 	if(fvp_log_level > LOG_I)
 	{
@@ -137,7 +136,7 @@ void log_i(char *format, ...)
 }
 
 /*warn log*/
-void log_w(char *format, ...)
+void fvp_log_w(char *format, ...)
 {
 	if(fvp_log_level > LOG_W)
 	{
@@ -155,7 +154,7 @@ void log_w(char *format, ...)
 }
 
 /*error log*/
-void log_e(char *format, ...)
+void fvp_log_e(char *format, ...)
 {
 	if(fvp_log_level > LOG_E)
 	{
